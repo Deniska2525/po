@@ -18,4 +18,7 @@ RUN python -c "import uvicorn; print('uvicorn installed successfully')"
 
 EXPOSE 8000
 
+# Запускаем init_db.py перед стартом сервера
+CMD python init_db.py
+
 CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
