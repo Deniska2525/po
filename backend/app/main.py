@@ -101,7 +101,8 @@ def init_database():
         db.close()
 
 app = FastAPI(title="Marketplace PO API")
-@app.post("/admin/init-db")
+app.post("/admin/init-db")
+
 # Настройка CORS
 app.add_middleware(
     CORSMiddleware,
