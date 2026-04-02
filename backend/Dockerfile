@@ -9,7 +9,7 @@ ENV PIP_RETRIES=10
 # Копируем и устанавливаем зависимости
 COPY requirements.txt .
 RUN pip install fastapi uvicorn[standard]
-RUN pip install --no-cache-dir --timeout 100 --retries 10 -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
 RUN mkdir -p /app/data
