@@ -11,7 +11,6 @@ from datetime import datetime
 # Создание таблиц в БД
 Base.metadata.create_all(bind=engine)
 
-#@app.post("/admin/init-db")
 def init_database():
     """Инициализация базы данных тестовыми данными"""
     db = SessionLocal()
@@ -102,7 +101,7 @@ def init_database():
         db.close()
 
 app = FastAPI(title="Marketplace PO API")
-
+@app.post("/admin/init-db")
 # Настройка CORS
 app.add_middleware(
     CORSMiddleware,
