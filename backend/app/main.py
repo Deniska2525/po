@@ -11,7 +11,7 @@ from datetime import datetime
 # Создание таблиц в БД
 Base.metadata.create_all(bind=engine)
 
-@app.post("/admin/init-db")
+#@app.post("/admin/init-db")
 def init_database():
     """Инициализация базы данных тестовыми данными"""
     db = SessionLocal()
