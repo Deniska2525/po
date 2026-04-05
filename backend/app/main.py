@@ -12,7 +12,6 @@ from datetime import datetime
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Marketplace PO API")
-app.post("/admin/init-db")
 
 # Настройка CORS
 # Получаем URL фронтенда из переменной окружения
