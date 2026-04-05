@@ -15,7 +15,6 @@ COPY . .
 RUN mkdir -p /app/data
 
 RUN python -c "import uvicorn; print('uvicorn installed successfully')"
-RUN python init_db.py 
 
 EXPOSE 8000
 
