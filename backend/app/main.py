@@ -6,9 +6,6 @@ from .routers import users, products, search, admin, orders, downloads
 from . import models
 import os
 
-# Создание таблиц в БД
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI(title="Marketplace PO API")
 
 # Настройка CORS
