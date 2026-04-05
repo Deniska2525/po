@@ -5,6 +5,7 @@ from .database import engine, Base
 from .routers import users, products, search, admin, orders, downloads
 from . import models
 import os
+import subprocess
 
 app = FastAPI(title="Marketplace PO API")
 
