@@ -1,12 +1,13 @@
 import axios from 'axios'
 
-// В Docker контейнере API доступен через прокси Nginx по пути /api/
-// Для локальной разработки используем localhost
-const API_URL = import.meta.env.PROD ? '/api' : 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 const api = axios.create({
-  baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' }
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: true,
 })
 
 api.interceptors.request.use(config => {
