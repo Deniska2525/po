@@ -10,6 +10,8 @@ app = FastAPI(title="Marketplace PO API")
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
+Base.metadata.create_all(bind=engine)
+
 # Настройка CORS
 app.add_middleware(
     CORSMiddleware,
