@@ -9,25 +9,14 @@ import subprocess
 
 app = FastAPI(title="Marketplace PO API")
 
-@app.on_event("startup")
-def startup_event():
-    """Запускается при старте контейнера, когда DATABASE_URL уже задана"""
-    print("=" * 60)
-    print("ЗАПУСК ИНИЦИАЛИЗАЦИИ БАЗЫ ДАННЫХ")
-    print(f"DATABASE_URL: {os.getenv('DATABASE_URL', 'не задана')[:50]}...")
-    print("=" * 60)
-    
-    # Запускаем скрипт инициализации
-    result = subprocess.run(
-        ["python", "init_db.py"],
-        capture_output=True,
-        text=True,
-        cwd=os.path.dirname(__file__)
-    )
+result = subprocess.run(
+    ["python", "init_db.py"],
+    capture_output=True,
+    text=True,
+    cwd=os.path.dirname(__file__)
+)
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
-
-Base.metadata.create_all(bind=engine)
 
 # Настройка CORS
 app.add_middleware(
