@@ -16,15 +16,9 @@ app = FastAPI(title="Marketplace PO API")
 # Настройка CORS
 # Получаем URL фронтенда из переменной окружения
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
-# Для разработки можно разрешить несколько URL
-ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Локальная разработка
-    "http://localhost:8000",   # Альтернативный dev порт
-    FRONTEND_URL,              # URL на Render'е (придет из переменной)
-]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,  # Теперь массив, а не строка
+    allow_origins=FRONTEND_URL,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
