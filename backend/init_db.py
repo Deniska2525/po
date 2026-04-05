@@ -116,16 +116,6 @@ try:
     print(f"✅ Добавлено {len(products_data)} продуктов")
     
     
-    # Обновляем счетчики продуктов
-    print("Обновление статистики продуктов...")
-    for product in db.query(models.Product).all():
-        reviews = db.query(models.Review).filter(models.Review.product_id == product.id).all()
-        if reviews:
-            product.reviews_count = len(reviews)
-            product.rating = sum(r.rating for r in reviews) / len(reviews)
-    
-    db.commit()
-    
     print("=" * 60)
     print("✅ ИНИЦИАЛИЗАЦИЯ УСПЕШНО ЗАВЕРШЕНА")
     print("=" * 60)
@@ -135,7 +125,6 @@ try:
     print(f"   - Пользователей: {db.query(models.User).count()}")
     print(f"   - Категорий: {db.query(models.Category).count()}")
     print(f"   - Продуктов: {db.query(models.Product).count()}")
-    print(f"   - Отзывов: {db.query(models.Review).count()}")
     
 except Exception as e:
     print(f"❌ ОШИБКА: {e}")
