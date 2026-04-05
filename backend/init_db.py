@@ -115,47 +115,6 @@ try:
     db.commit()
     print(f"✅ Добавлено {len(products_data)} продуктов")
     
-    # Добавляем несколько отзывов к продуктам
-    print("Добавление отзывов...")
-    
-    # Получаем продукты по названию
-    product_1c = db.query(models.Product).filter(models.Product.name == "Интеграция 1С ↔ Telegram").first()
-    product_wb = db.query(models.Product).filter(models.Product.name == "Сборщик данных Wildberries").first()
-    product_crm = db.query(models.Product).filter(models.Product.name == "CRM-воронка для Bitrix24").first()
-    product_kp = db.query(models.Product).filter(models.Product.name == "Генератор коммерческих предложений").first()
-    product_tg = db.query(models.Product).filter(models.Product.name == "Telegram-бот для корпоративного портала").first()
-    
-    # Получаем пользователей
-    buyer_anna = db.query(models.User).filter(models.User.username == "buyer_anna").first()
-    manager_alex = db.query(models.User).filter(models.User.username == "manager_alex").first()
-    dev_ivan = db.query(models.User).filter(models.User.username == "dev_ivan").first()
-    
-    reviews_data = [
-        {"product": product_1c, "user": buyer_anna, "rating": 5, 
-         "comment": "Отличная интеграция, работает стабильно!"},
-        {"product": product_wb, "user": buyer_anna, "rating": 4, 
-         "comment": "Хороший инструмент, но иногда тормозит"},
-        {"product": product_crm, "user": manager_alex, "rating": 5, 
-         "comment": "Лучшее решение для отчетности!"},
-        {"product": product_kp, "user": manager_alex, "rating": 5, 
-         "comment": "Экономит часы работы"},
-        {"product": product_tg, "user": dev_ivan, "rating": 5, 
-         "comment": "Сам себе ставлю 5 😊"},
-    ]
-    
-    for review_data in reviews_data:
-        if review_data["product"] and review_data["user"]:
-            review = models.Review(
-                product_id=review_data["product"].id,
-                user_id=review_data["user"].id,
-                rating=review_data["rating"],
-                comment=review_data["comment"],
-                created_at=datetime.now()
-            )
-            db.add(review)
-    
-    db.commit()
-    print(f"✅ Добавлено отзывов: {len(reviews_data)}")
     
     # Обновляем счетчики продуктов
     print("Обновление статистики продуктов...")
