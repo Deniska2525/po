@@ -8,10 +8,15 @@ import os
 
 app = FastAPI(title="Marketplace PO API")
 
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
 # Настройка CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vue dev server
+    allow_origins=[
+        "http://localhost:5173",
+        FRONTEND_URL,  # Сюда подставится URL из Render
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
