@@ -4,6 +4,8 @@ from app import models
 from app.auth import get_password_hash
 from datetime import datetime
 
+print(f"🔍 DATABASE_URL: {os.getenv('DATABASE_URL', 'не задана!')[:50]}...")
+
 print("=" * 60)
 print("ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ")
 print("=" * 60)
