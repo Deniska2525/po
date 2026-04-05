@@ -2,8 +2,7 @@ import os
 from app.database import SessionLocal, engine, Base
 from app import models
 from app.auth import get_password_hash
-import random
-from datetime import datetime, timedelta
+from datetime import datetime
 
 print("=" * 60)
 print("ИНИЦИАЛИЗАЦИЯ БАЗЫ ДАННЫХ")
@@ -70,91 +69,85 @@ try:
     db.commit()
     print(f"✅ Добавлено {len(users_data)} пользователей")
     
-    # Получаем объекты для связей (через refresh или query)
-    # Обновляем объекты, чтобы получить их ID
-    for user in db.query(models.User).all():
-        db.refresh(user)
-    
-    # Получаем разработчиков по username
+    # Получаем разработчиков
     dev_ivan = db.query(models.User).filter(models.User.username == "dev_ivan").first()
     dev_maria = db.query(models.User).filter(models.User.username == "dev_maria").first()
     
-    # Получаем категории для связей
-    categories_dict = {}
-    for cat in db.query(models.Category).all():
-        categories_dict[cat.name] = cat
-    
-    # Создание продуктов
+    # Создание продуктов (используем название категории, не ID)
     products_data = [
         {"name": "Интеграция 1С ↔ Telegram", "description": "Отправка отчетов из 1С в Telegram", 
-         "price": 45000, "category_name": "Интеграции", "developer": dev_ivan, "downloads": 89, "file_size": 2.5, "version": "2.1.0"},
+         "price": 45000, "category": "Интеграции", "developer": dev_ivan, "downloads": 89, "file_size": 2.5, "version": "2.1.0"},
         {"name": "Сборщик данных Wildberries", "description": "Парсинг статистики продаж", 
-         "price": 35000, "category_name": "Аналитика", "developer": dev_ivan, "downloads": 156, "file_size": 1.8, "version": "3.2.0"},
+         "price": 35000, "category": "Аналитика", "developer": dev_ivan, "downloads": 156, "file_size": 1.8, "version": "3.2.0"},
         {"name": "CRM-воронка для Bitrix24", "description": "Кастомные отчеты по воронке", 
-         "price": 79000, "category_name": "CRM/ERP", "developer": dev_maria, "downloads": 234, "file_size": 5.2, "version": "1.5.0"},
+         "price": 79000, "category": "CRM/ERP", "developer": dev_maria, "downloads": 234, "file_size": 5.2, "version": "1.5.0"},
         {"name": "Генератор коммерческих предложений", "description": "Автосборка КП из шаблонов", 
-         "price": 25000, "category_name": "Документооборот", "developer": dev_maria, "downloads": 312, "file_size": 1.2, "version": "4.0.0"},
+         "price": 25000, "category": "Документооборот", "developer": dev_maria, "downloads": 312, "file_size": 1.2, "version": "4.0.0"},
         {"name": "API-шлюз для онлайн-кассы", "description": "Интеграция с АТОЛ, Штрих-М", 
-         "price": 65000, "category_name": "Финансы", "developer": dev_ivan, "downloads": 67, "file_size": 8.5, "version": "1.2.0"},
+         "price": 65000, "category": "Финансы", "developer": dev_ivan, "downloads": 67, "file_size": 8.5, "version": "1.2.0"},
         {"name": "Telegram-бот для корпоративного портала", "description": "Интеграция с Active Directory", 
-         "price": 38000, "category_name": "Интеграции", "developer": dev_ivan, "downloads": 178, "file_size": 0.9, "version": "2.3.0"},
+         "price": 38000, "category": "Интеграции", "developer": dev_ivan, "downloads": 178, "file_size": 0.9, "version": "2.3.0"},
         {"name": "ETL-коннектор для Power BI", "description": "Выгрузка данных в дашборды", 
-         "price": 55000, "category_name": "Аналитика", "developer": dev_maria, "downloads": 203, "file_size": 4.5, "version": "1.8.0"},
+         "price": 55000, "category": "Аналитика", "developer": dev_maria, "downloads": 203, "file_size": 4.5, "version": "1.8.0"},
         {"name": "API Gateway для микросервисов", "description": "Маршрутизация и аутентификация запросов", 
-         "price": 99000, "category_name": "Интеграции", "developer": dev_ivan, "downloads": 45, "file_size": 12.0, "version": "1.0.0"},
+         "price": 99000, "category": "Интеграции", "developer": dev_ivan, "downloads": 45, "file_size": 12.0, "version": "1.0.0"},
         {"name": "Дашборд продаж для AmoCRM", "description": "Визуализация воронки и прогнозов", 
-         "price": 49000, "category_name": "CRM/ERP", "developer": dev_maria, "downloads": 98, "file_size": 3.2, "version": "2.1.0"},
+         "price": 49000, "category": "CRM/ERP", "developer": dev_maria, "downloads": 98, "file_size": 3.2, "version": "2.1.0"},
         {"name": "Автоматизация выставления счетов", "description": "Интеграция 1С и банк-клиента", 
-         "price": 125000, "category_name": "Финансы", "developer": dev_ivan, "downloads": 34, "file_size": 6.8, "version": "1.5.0"},
+         "price": 125000, "category": "Финансы", "developer": dev_ivan, "downloads": 34, "file_size": 6.8, "version": "1.5.0"},
     ]
     
     for p_data in products_data:
-        category = categories_dict.get(p_data["category_name"])
-        if category:
-            product = models.Product(
-                name=p_data["name"],
-                description=p_data["description"],
-                price=p_data["price"],
-                category_id=category.id,  # Используем ID вместо имени
-                developer_id=p_data["developer"].id,
-                download_url=f"https://example.com/download/{p_data['name'].lower().replace(' ', '_')}",
-                file_size=p_data["file_size"],
-                version=p_data["version"],
-                downloads_count=p_data["downloads"],
-                is_active=True
-            )
-            db.add(product)
-        else:
-            print(f"⚠️ Категория '{p_data['category_name']}' не найдена для продукта '{p_data['name']}'")
+        product = models.Product(
+            name=p_data["name"],
+            description=p_data["description"],
+            price=p_data["price"],
+            category=p_data["category"],  #直接用 название категории
+            developer_id=p_data["developer"].id,
+            download_url=f"https://example.com/download/{p_data['name'].lower().replace(' ', '_')}",
+            file_size=p_data["file_size"],
+            version=p_data["version"],
+            downloads_count=p_data["downloads"],
+            is_active=True
+        )
+        db.add(product)
     
     db.commit()
     print(f"✅ Добавлено {len(products_data)} продуктов")
     
     # Добавляем несколько отзывов к продуктам
     print("Добавление отзывов...")
-    products = db.query(models.Product).all()
-    users = db.query(models.User).filter(models.User.role == "user").all()
+    
+    # Получаем продукты по названию
+    product_1c = db.query(models.Product).filter(models.Product.name == "Интеграция 1С ↔ Telegram").first()
+    product_wb = db.query(models.Product).filter(models.Product.name == "Сборщик данных Wildberries").first()
+    product_crm = db.query(models.Product).filter(models.Product.name == "CRM-воронка для Bitrix24").first()
+    product_kp = db.query(models.Product).filter(models.Product.name == "Генератор коммерческих предложений").first()
+    product_tg = db.query(models.Product).filter(models.Product.name == "Telegram-бот для корпоративного портала").first()
+    
+    # Получаем пользователей
+    buyer_anna = db.query(models.User).filter(models.User.username == "buyer_anna").first()
+    manager_alex = db.query(models.User).filter(models.User.username == "manager_alex").first()
+    dev_ivan = db.query(models.User).filter(models.User.username == "dev_ivan").first()
     
     reviews_data = [
-        {"product": "Интеграция 1С ↔ Telegram", "user": "buyer_anna", "rating": 5, 
+        {"product": product_1c, "user": buyer_anna, "rating": 5, 
          "comment": "Отличная интеграция, работает стабильно!"},
-        {"product": "Сборщик данных Wildberries", "user": "buyer_anna", "rating": 4, 
+        {"product": product_wb, "user": buyer_anna, "rating": 4, 
          "comment": "Хороший инструмент, но иногда тормозит"},
-        {"product": "CRM-воронка для Bitrix24", "user": "manager_alex", "rating": 5, 
+        {"product": product_crm, "user": manager_alex, "rating": 5, 
          "comment": "Лучшее решение для отчетности!"},
-        {"product": "Генератор коммерческих предложений", "user": "manager_alex", "rating": 5, 
+        {"product": product_kp, "user": manager_alex, "rating": 5, 
          "comment": "Экономит часы работы"},
-        {"product": "Telegram-бот для корпоративного портала", "user": "dev_ivan", "rating": 5, 
+        {"product": product_tg, "user": dev_ivan, "rating": 5, 
          "comment": "Сам себе ставлю 5 😊"},
     ]
     
     for review_data in reviews_data:
-        product = db.query(models.Product).filter(models.Product.name == review_data["product"]).first()
-        user = db.query(models.User).filter(models.User.username == review_data["user"]).first()
-        if product and user:
+        if review_data["product"] and review_data["user"]:
             review = models.Review(
-                product_id=product.id,
-                user_id=user.id,
+                product_id=review_data["product"].id,
+                user_id=review_data["user"].id,
                 rating=review_data["rating"],
                 comment=review_data["comment"],
                 created_at=datetime.now()
@@ -164,7 +157,7 @@ try:
     db.commit()
     print(f"✅ Добавлено отзывов: {len(reviews_data)}")
     
-    # Обновляем счетчики продуктов (количество отзывов, средний рейтинг)
+    # Обновляем счетчики продуктов
     print("Обновление статистики продуктов...")
     for product in db.query(models.Product).all():
         reviews = db.query(models.Review).filter(models.Review.product_id == product.id).all()
