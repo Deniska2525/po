@@ -1,12 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from .database import engine, Base, SessionLocal
+from .database import engine, Base
 from .routers import users, products, search, admin, orders, downloads
 from . import models
 import os
-from .auth import get_password_hash
-from datetime import datetime
 
 # Создание таблиц в БД
 Base.metadata.create_all(bind=engine)
@@ -14,11 +12,9 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Marketplace PO API")
 
 # Настройка CORS
-# Получаем URL фронтенда из переменной окружения
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=FRONTEND_URL,
+    allow_origins=["http://localhost:5173"],  # Vue dev server
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
