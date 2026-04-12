@@ -26,7 +26,7 @@ const themeStore = useThemeStore()
   height: 32px;
   border-radius: 40px;
   background: var(--toggle-bg);
-  border: 2px solid var(--toggle-border);
+  border: 2px solid #2ecc71;
   cursor: pointer;
   padding: 0;
   transition: all 0.3s ease;
