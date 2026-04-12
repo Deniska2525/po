@@ -52,8 +52,9 @@
   
   /* Переключатель темы */
   --toggle-bg: #f1f5f9;
-  --toggle-border: #e2e8f0;
+  --toggle-border: #cbd5e0;
   --toggle-knob: #ffffff;
+  --toggle-knob-active: #2ecc71;
 }
 
 /* Темная тема */
@@ -111,10 +112,11 @@
   /* Переключатель темы */
   --toggle-bg: #334155;
   --toggle-border: #475569;
-  --toggle-knob: #2ecc71;
+  --toggle-knob: #f1f5f9;
+  --toggle-knob-active: #2ecc71;
 }
 
-/* Применяем переменные */
+/* Глобальное применение */
 body {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
