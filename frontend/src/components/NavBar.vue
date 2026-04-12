@@ -9,7 +9,7 @@
         <router-link to="/cart" class="nav-link cart-link">🛒 Корзина</router-link>
         
         <router-link v-if="isAdmin" to="/admin" class="nav-link admin-link">
-          👑 Админ
+          Админ-панель
         </router-link>
         
         <ThemeToggle />
