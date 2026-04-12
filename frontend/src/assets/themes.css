@@ -53,7 +53,7 @@
   /* Переключатель темы */
   --toggle-bg: #f1f5f9;
   --toggle-border: #2ecc71;
-  --toggle-knob: #ffffff;
+  --toggle-knob: #2ecc71;
   --toggle-knob-active: #2ecc71;
 }
 
