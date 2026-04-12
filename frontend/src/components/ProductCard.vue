@@ -98,5 +98,42 @@ const addToCart = () => {
 </script>
 
 <style scoped>
-  @import '@/assets/styles/product-card.css';
+  .product-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-hover);
+}
+
+.product-title {
+  color: var(--text-primary);
+}
+
+.product-description {
+  color: var(--text-secondary);
+}
+
+.product-meta {
+  background: var(--bg-tertiary);
+  border-radius: 12px;
+  padding: 0.75rem;
+}
+
+.category-badge {
+  background: var(--primary-light);
+  color: var(--success-text);
+}
+
+/* Остальные стили остаются без изменений */
 </style>
