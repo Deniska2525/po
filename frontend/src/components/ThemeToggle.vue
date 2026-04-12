@@ -62,11 +62,11 @@ const themeStore = useThemeStore()
 }
 
 .moon {
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .theme-toggle.active .sun {
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .theme-toggle.active .moon {
@@ -87,6 +87,6 @@ const themeStore = useThemeStore()
 
 .theme-toggle.active .toggle-knob {
   transform: translateX(32px);
-  background: var(--primary-color);
+  background: var(--toggle-knob-active);
 }
 </style>
