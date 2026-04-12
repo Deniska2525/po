@@ -1,21 +1,40 @@
 /* Светлая тема (по умолчанию) */
 :root {
+  /* Основные цвета */
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
   --bg-tertiary: #f1f5f9;
+  --bg-card: #ffffff;
+  
+  /* Текст */
   --text-primary: #1a2634;
   --text-secondary: #4a5568;
   --text-muted: #94a3b8;
+  
+  /* Границы */
   --border-color: #eaeef2;
-  --card-bg: #ffffff;
-  --card-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  --card-hover-shadow: 0 8px 20px rgba(46,204,113,0.12);
+  --border-hover: #2ecc71;
+  
+  /* Тени */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 8px 20px rgba(46, 204, 113, 0.12);
+  
+  /* Кнопки и акценты */
+  --primary-color: #2ecc71;
+  --primary-hover: #27ae60;
+  --primary-light: #e8f5e9;
+  
+  /* Формы */
   --input-bg: #ffffff;
   --input-border: #e0e7ed;
+  --input-focus: #2ecc71;
+  
+  /* Навбар */
   --navbar-bg: #ffffff;
-  --navbar-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  --modal-overlay: rgba(0,0,0,0.5);
-  --hero-gradient: linear-gradient(135deg, #2ecc71, #27ae60);
+  --navbar-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  
+  /* Бейджи */
   --success-bg: #e8f5e9;
   --success-text: #2ecc71;
   --warning-bg: #fff3e0;
@@ -24,30 +43,56 @@
   --danger-text: #e74c3c;
   --info-bg: #e3f2fd;
   --info-text: #2196f3;
-  --tag-bg: #f1f5f9;
-  --tag-text: #4a5568;
-  --note-bg: #fef9e6;
-  --note-text: #b8860b;
+  
+  /* Ховеры */
+  --hover-bg: #f8fafc;
+  
+  /* Герой секция */
+  --hero-gradient: linear-gradient(135deg, #2ecc71, #27ae60);
+  
+  /* Переключатель темы */
+  --toggle-bg: #f1f5f9;
+  --toggle-border: #e2e8f0;
+  --toggle-knob: #ffffff;
 }
 
 /* Темная тема */
 [data-theme="dark"] {
+  /* Основные цвета */
   --bg-primary: #0f172a;
   --bg-secondary: #1e293b;
   --bg-tertiary: #334155;
+  --bg-card: #1e293b;
+  
+  /* Текст */
   --text-primary: #f1f5f9;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
+  
+  /* Границы */
   --border-color: #334155;
-  --card-bg: #1e293b;
-  --card-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  --card-hover-shadow: 0 8px 20px rgba(46,204,113,0.2);
+  --border-hover: #2ecc71;
+  
+  /* Тени */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 8px 20px rgba(46, 204, 113, 0.2);
+  
+  /* Кнопки и акценты */
+  --primary-color: #2ecc71;
+  --primary-hover: #27ae60;
+  --primary-light: #1e3a2f;
+  
+  /* Формы */
   --input-bg: #334155;
   --input-border: #475569;
+  --input-focus: #2ecc71;
+  
+  /* Навбар */
   --navbar-bg: #0f172a;
-  --navbar-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  --modal-overlay: rgba(0,0,0,0.7);
-  --hero-gradient: linear-gradient(135deg, #27ae60, #229954);
+  --navbar-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  
+  /* Бейджи */
   --success-bg: #1e3a2f;
   --success-text: #6ee7b7;
   --warning-bg: #3d2e1e;
@@ -56,13 +101,20 @@
   --danger-text: #f87171;
   --info-bg: #1e2a3d;
   --info-text: #60a5fa;
-  --tag-bg: #334155;
-  --tag-text: #cbd5e1;
-  --note-bg: #3d2e1e;
-  --note-text: #fbbf24;
+  
+  /* Ховеры */
+  --hover-bg: #334155;
+  
+  /* Герой секция */
+  --hero-gradient: linear-gradient(135deg, #229954, #1e8449);
+  
+  /* Переключатель темы */
+  --toggle-bg: #334155;
+  --toggle-border: #475569;
+  --toggle-knob: #2ecc71;
 }
 
-/* Применяем переменные к элементам */
+/* Применяем переменные */
 body {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
