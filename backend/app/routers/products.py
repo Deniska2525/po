@@ -34,7 +34,10 @@ def get_my_products(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(auth.get_current_active_user)
 ):
-    return db.query(models.Product).filter(models.Product.developer_id == current_user.id).all()
+    # Поиск продуктов разработчика с сортировкой по убыванию ID
+    return db.query(models.Product).filter(
+        models.Product.developer_id == current_user.id
+    ).order_by(models.Product.id.desc()).all()
 
 @router.get("/{product_id}", response_model=schemas.Product)
 def get_product(product_id: int, db: Session = Depends(get_db)):
