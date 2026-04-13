@@ -196,8 +196,7 @@ try:
         print(f"   - Пользователей: {db.query(models.User).count()}")
         print(f"   - Категорий: {db.query(models.Category).count()}")
         print(f"   - Продуктов: {db.query(models.Product).count()}")
-    else:
-        print("Данные уже существуют, инициализация пропущена")
+    
         
 except Exception as e:
     print(f"❌ ОШИБКА: {e}")
