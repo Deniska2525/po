@@ -20,161 +20,160 @@ print("=" * 60)
 db_path = engine.url.database
 print(f"Путь к базе данных: {db_path}")
 
-if os.path.exists(db_path):
-    print(f"Удаление существующего файла БД...")
-    os.remove(db_path)
-    print("✅ Файл удален")
-
-print("\nСоздание таблиц...")
+# ВСЕГДА пересоздаем таблицы (чистый старт)
+print("\nПересоздание таблиц...")
+Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
-print("✅ Таблицы созданы")
+print("✅ Таблицы пересозданы")
 
 db = SessionLocal()
 
 try:
-    # Создание категорий
+    # --- 1. Категории ---
     print("\nСоздание категорий...")
-    categories = [
-        models.Category(name="Интеграции", description="API, webhooks, синхронизация систем", icon="🔌"),
-        models.Category(name="Аналитика и BI", description="Дашборды, отчеты, визуализация данных", icon="📊"),
-        models.Category(name="CRM и ERP", description="Bitrix24, 1С, AmoCRM, Salesforce", icon="👥"),
-        models.Category(name="Документооборот", description="КП, договоры, счета, ЭДО", icon="📄"),
-        models.Category(name="Финансы и налоги", description="Кассы, ФНС, банки, 54-ФЗ", icon="💰"),
-        models.Category(name="Автоматизация", description="Скрипты, роботы, workflow, RPA", icon="⚡"),
-        models.Category(name="Маркетинг", description="Email-рассылки, сегментация, воронки", icon="📧"),
-        models.Category(name="Склад и логистика", description="Управление запасами, WMS, маркировка", icon="🚚"),
-        models.Category(name="Корпоративные коммуникации", description="Боты, порталы, мессенджеры", icon="💬"),
-        models.Category(name="Базы данных", description="SQL, NoSQL, ETL, миграции", icon="🗄️"),
-        models.Category(name="Безопасность", description="Аутентификация, шифрование, аудит", icon="🔒"),
-        models.Category(name="Искусственный интеллект", description="NLP, компьютерное зрение, прогнозирование", icon="🧠"),
+    categories_data = [
+        ("Интеграции", "API, webhooks, синхронизация систем", "🔌"),
+        ("Аналитика и BI", "Дашборды, отчеты, визуализация данных", "📊"),
+        ("CRM и ERP", "Bitrix24, 1С, AmoCRM, Salesforce", "👥"),
+        ("Документооборот", "КП, договоры, счета, ЭДО", "📄"),
+        ("Финансы и налоги", "Кассы, ФНС, банки, 54-ФЗ", "💰"),
+        ("Автоматизация", "Скрипты, роботы, workflow, RPA", "⚡"),
+        ("Маркетинг", "Email-рассылки, сегментация, воронки", "📧"),
+        ("Склад и логистика", "Управление запасами, WMS, маркировка", "🚚"),
+        ("Корпоративные коммуникации", "Боты, порталы, мессенджеры", "💬"),
+        ("Базы данных", "SQL, NoSQL, ETL, миграции", "🗄️"),
+        ("Безопасность", "Аутентификация, шифрование, аудит", "🔒"),
+        ("Искусственный интеллект", "NLP, компьютерное зрение, прогнозирование", "🧠"),
     ]
-    for cat in categories:
-        db.add(cat)
+    for name, desc, icon in categories_data:
+        # Проверяем, существует ли уже категория
+        existing_cat = db.query(models.Category).filter(models.Category.name == name).first()
+        if not existing_cat:
+            cat = models.Category(name=name, description=desc, icon=icon)
+            db.add(cat)
     db.commit()
-    print(f"✅ Добавлено {len(categories)} категорий")
+    print(f"✅ Категории добавлены (всего: {len(categories_data)})")
 
-    # Создание пользователей
+    # --- 2. Пользователи ---
     print("\nСоздание пользователей...")
     users_data = [
-        {"username": "admin", "email": "admin@example.com", "password": "admin123", "full_name": "Администратор", "role": "admin"},
-        {"username": "superuser", "email": "super@example.com", "password": "admin123", "full_name": "Суперпользователь", "role": "superuser"},
-        {"username": "dev_ivan", "email": "ivan@example.com", "password": "dev123", "full_name": "Иван Петров", "role": "developer"},
-        {"username": "dev_maria", "email": "maria@example.com", "password": "dev123", "full_name": "Мария Соколова", "role": "developer"},
-        {"username": "dev_alexey", "email": "alexey@example.com", "password": "dev123", "full_name": "Алексей Козлов", "role": "developer"},
-        {"username": "dev_elena", "email": "elena@example.com", "password": "dev123", "full_name": "Елена Морозова", "role": "developer"},
-        {"username": "manager_alex", "email": "alex@example.com", "password": "manager123", "full_name": "Алексей Иванов", "role": "manager"},
-        {"username": "buyer_anna", "email": "anna@example.com", "password": "buyer123", "full_name": "Анна Смирнова", "role": "user"},
-        {"username": "buyer_company", "email": "company@example.com", "password": "buyer123", "full_name": "ООО Технологии", "role": "user"},
+        ("admin", "admin@example.com", "admin123", "Администратор", "admin"),
+        ("superuser", "super@example.com", "admin123", "Суперпользователь", "superuser"),
+        ("dev_ivan", "ivan@example.com", "dev123", "Иван Петров", "developer"),
+        ("dev_maria", "maria@example.com", "dev123", "Мария Соколова", "developer"),
+        ("dev_alexey", "alexey@example.com", "dev123", "Алексей Козлов", "developer"),
+        ("dev_elena", "elena@example.com", "dev123", "Елена Морозова", "developer"),
+        ("manager_alex", "alex@example.com", "manager123", "Алексей Иванов", "manager"),
+        ("buyer_anna", "anna@example.com", "buyer123", "Анна Смирнова", "user"),
+        ("buyer_company", "company@example.com", "buyer123", "ООО Технологии", "user"),
     ]
-    
-    for user_data in users_data:
-        user = models.User(
-            username=user_data["username"],
-            email=user_data["email"],
-            hashed_password=get_password_hash(user_data["password"]),
-            full_name=user_data["full_name"],
-            role=user_data["role"],
-            is_active=True,
-            created_at=datetime.utcnow()
-        )
-        db.add(user)
+    for username, email, pwd, fullname, role in users_data:
+        existing_user = db.query(models.User).filter(models.User.username == username).first()
+        if not existing_user:
+            user = models.User(
+                username=username,
+                email=email,
+                hashed_password=get_password_hash(pwd),
+                full_name=fullname,
+                role=role,
+                is_active=True,
+                created_at=datetime.utcnow()
+            )
+            db.add(user)
     db.commit()
-    print(f"✅ Добавлено {len(users_data)} пользователей")
-    
+    print(f"✅ Пользователи добавлены (всего: {len(users_data)})")
+
     # Получаем разработчиков
     dev_ivan = db.query(models.User).filter(models.User.username == "dev_ivan").first()
     dev_maria = db.query(models.User).filter(models.User.username == "dev_maria").first()
     dev_alexey = db.query(models.User).filter(models.User.username == "dev_alexey").first()
     dev_elena = db.query(models.User).filter(models.User.username == "dev_elena").first()
-    
-    # 50 продуктов
+
+    # --- 3. Продукты (50 штук) ---
     print("\nСоздание продуктов (50 шт)...")
     products_data = [
         # Интеграции (1-10)
-        {"name": "Интеграция 1С с Telegram", "description": "Автоматическая отправка отчетов из 1С в Telegram. Поддержка PDF, Excel, графиков.", "price": 45000, "category": "Интеграции", "dev": dev_ivan, "downloads": 89, "file_size": 2.5, "version": "2.1.0"},
-        {"name": "Интеграция Bitrix24 с WhatsApp", "description": "Двусторонняя синхронизация чатов WhatsApp с карточками сделок в Bitrix24.", "price": 35000, "category": "Интеграции", "dev": dev_ivan, "downloads": 156, "file_size": 1.8, "version": "1.5.0"},
-        {"name": "API-шлюз для онлайн-касс", "description": "Интеграция с АТОЛ, Штрих-М, Эвотор. Отправка чеков, работа с ФНС.", "price": 65000, "category": "Интеграции", "dev": dev_ivan, "downloads": 67, "file_size": 8.5, "version": "1.2.0"},
-        {"name": "Синхронизация 1С и Wildberries", "description": "Автоматическая выгрузка товаров, остатков и цен на Wildberries.", "price": 55000, "category": "Интеграции", "dev": dev_maria, "downloads": 234, "file_size": 3.2, "version": "2.0.0"},
-        {"name": "Интеграция AmoCRM с Telegram", "description": "Уведомления о новых сделках, лидах и задачах в Telegram.", "price": 25000, "category": "Интеграции", "dev": dev_alexey, "downloads": 312, "file_size": 1.2, "version": "1.8.0"},
-        {"name": "Связка Google Sheets и 1С", "description": "Обмен данными между Google Sheets и 1С:Предприятие.", "price": 30000, "category": "Интеграции", "dev": dev_maria, "downloads": 178, "file_size": 1.5, "version": "1.3.0"},
-        {"name": "Интеграция Jira с Telegram", "description": "Уведомления о задачах, комментариях и смене статусов.", "price": 28000, "category": "Интеграции", "dev": dev_alexey, "downloads": 203, "file_size": 0.9, "version": "2.2.0"},
-        {"name": "Синхронизация CRM и Email", "description": "Автоматическая синхронизация контактов и рассылок.", "price": 32000, "category": "Интеграции", "dev": dev_elena, "downloads": 145, "file_size": 1.1, "version": "1.4.0"},
-        {"name": "Интеграция МойСклад с 1С", "description": "Двусторонняя синхронизация товаров, остатков и заказов.", "price": 48000, "category": "Интеграции", "dev": dev_ivan, "downloads": 92, "file_size": 2.8, "version": "1.1.0"},
-        {"name": "API-шлюз для платежных систем", "description": "Единый API для Tinkoff, Sberbank, ЮKassa, Stripe.", "price": 58000, "category": "Интеграции", "dev": dev_maria, "downloads": 67, "file_size": 4.2, "version": "2.0.0"},
-        
+        ("Интеграция 1С с Telegram", "Автоматическая отправка отчетов из 1С в Telegram. Поддержка PDF, Excel, графиков.", 45000, "Интеграции", dev_ivan, 89, 2.5, "2.1.0"),
+        ("Интеграция Bitrix24 с WhatsApp", "Двусторонняя синхронизация чатов WhatsApp с карточками сделок в Bitrix24.", 35000, "Интеграции", dev_ivan, 156, 1.8, "1.5.0"),
+        ("API-шлюз для онлайн-касс", "Интеграция с АТОЛ, Штрих-М, Эвотор. Отправка чеков, работа с ФНС.", 65000, "Интеграции", dev_ivan, 67, 8.5, "1.2.0"),
+        ("Синхронизация 1С и Wildberries", "Автоматическая выгрузка товаров, остатков и цен на Wildberries.", 55000, "Интеграции", dev_maria, 234, 3.2, "2.0.0"),
+        ("Интеграция AmoCRM с Telegram", "Уведомления о новых сделках, лидах и задачах в Telegram.", 25000, "Интеграции", dev_alexey, 312, 1.2, "1.8.0"),
+        ("Связка Google Sheets и 1С", "Обмен данными между Google Sheets и 1С:Предприятие.", 30000, "Интеграции", dev_maria, 178, 1.5, "1.3.0"),
+        ("Интеграция Jira с Telegram", "Уведомления о задачах, комментариях и смене статусов.", 28000, "Интеграции", dev_alexey, 203, 0.9, "2.2.0"),
+        ("Синхронизация CRM и Email", "Автоматическая синхронизация контактов и рассылок.", 32000, "Интеграции", dev_elena, 145, 1.1, "1.4.0"),
+        ("Интеграция МойСклад с 1С", "Двусторонняя синхронизация товаров, остатков и заказов.", 48000, "Интеграции", dev_ivan, 92, 2.8, "1.1.0"),
+        ("API-шлюз для платежных систем", "Единый API для Tinkoff, Sberbank, ЮKassa, Stripe.", 58000, "Интеграции", dev_maria, 67, 4.2, "2.0.0"),
         # Аналитика и BI (11-20)
-        {"name": "Дашборд для руководителя (Power BI)", "description": "KPI по продажам, загрузке склада, дебиторской задолженности.", "price": 55000, "category": "Аналитика и BI", "dev": dev_maria, "downloads": 203, "file_size": 4.5, "version": "1.8.0"},
-        {"name": "Анализ отзывов (NLP)", "description": "Мониторинг отзывов с маркетплейсов. Анализ тональности, категоризация.", "price": 42000, "category": "Аналитика и BI", "dev": dev_maria, "downloads": 187, "file_size": 2.1, "version": "1.4.0"},
-        {"name": "Прогнозирование продаж (ML)", "description": "Модель машинного обучения для прогноза продаж на 30 дней.", "price": 89000, "category": "Аналитика и BI", "dev": dev_alexey, "downloads": 45, "file_size": 12.5, "version": "1.0.0"},
-        {"name": "ETL-коннектор для Tableau", "description": "Выгрузка данных из 1С, CRM, ERP в Tableau.", "price": 48000, "category": "Аналитика и BI", "dev": dev_maria, "downloads": 78, "file_size": 3.8, "version": "1.2.0"},
-        {"name": "Анализ конкурентов на WB/Ozon", "description": "Сбор и анализ цен, остатков, рейтингов конкурентов.", "price": 38000, "category": "Аналитика и BI", "dev": dev_ivan, "downloads": 234, "file_size": 2.2, "version": "2.1.0"},
-        {"name": "Дашборд для отдела продаж", "description": "Воронка продаж, конверсии, средний чек, прогнозы.", "price": 35000, "category": "Аналитика и BI", "dev": dev_maria, "downloads": 312, "file_size": 2.5, "version": "1.5.0"},
-        {"name": "Анализ эффективности рекламы", "description": "Сбор данных из Яндекс.Директ, VK Реклама, MyTarget.", "price": 29000, "category": "Аналитика и BI", "dev": dev_elena, "downloads": 156, "file_size": 1.8, "version": "1.3.0"},
-        {"name": "Сборщик данных для Google Looker", "description": "ETL-процессы для Google Looker Studio.", "price": 32000, "category": "Аналитика и BI", "dev": dev_alexey, "downloads": 89, "file_size": 2.0, "version": "1.1.0"},
-        {"name": "Анализ LTV и CAC клиентов", "description": "Расчет LTV, CAC, ROI, удержания клиентов.", "price": 39000, "category": "Аналитика и BI", "dev": dev_maria, "downloads": 167, "file_size": 1.9, "version": "1.4.0"},
-        {"name": "Мониторинг соцсетей (бренд-аналитика)", "description": "Сбор упоминаний бренда в соцсетях и СМИ.", "price": 44000, "category": "Аналитика и BI", "dev": dev_elena, "downloads": 123, "file_size": 2.3, "version": "1.2.0"},
-        
+        ("Дашборд для руководителя (Power BI)", "KPI по продажам, загрузке склада, дебиторской задолженности.", 55000, "Аналитика и BI", dev_maria, 203, 4.5, "1.8.0"),
+        ("Анализ отзывов (NLP)", "Мониторинг отзывов с маркетплейсов. Анализ тональности, категоризация.", 42000, "Аналитика и BI", dev_maria, 187, 2.1, "1.4.0"),
+        ("Прогнозирование продаж (ML)", "Модель машинного обучения для прогноза продаж на 30 дней.", 89000, "Аналитика и BI", dev_alexey, 45, 12.5, "1.0.0"),
+        ("ETL-коннектор для Tableau", "Выгрузка данных из 1С, CRM, ERP в Tableau.", 48000, "Аналитика и BI", dev_maria, 78, 3.8, "1.2.0"),
+        ("Анализ конкурентов на WB/Ozon", "Сбор и анализ цен, остатков, рейтингов конкурентов.", 38000, "Аналитика и BI", dev_ivan, 234, 2.2, "2.1.0"),
+        ("Дашборд для отдела продаж", "Воронка продаж, конверсии, средний чек, прогнозы.", 35000, "Аналитика и BI", dev_maria, 312, 2.5, "1.5.0"),
+        ("Анализ эффективности рекламы", "Сбор данных из Яндекс.Директ, VK Реклама, MyTarget.", 29000, "Аналитика и BI", dev_elena, 156, 1.8, "1.3.0"),
+        ("Сборщик данных для Google Looker", "ETL-процессы для Google Looker Studio.", 32000, "Аналитика и BI", dev_alexey, 89, 2.0, "1.1.0"),
+        ("Анализ LTV и CAC клиентов", "Расчет LTV, CAC, ROI, удержания клиентов.", 39000, "Аналитика и BI", dev_maria, 167, 1.9, "1.4.0"),
+        ("Мониторинг соцсетей (бренд-аналитика)", "Сбор упоминаний бренда в соцсетях и СМИ.", 44000, "Аналитика и BI", dev_elena, 123, 2.3, "1.2.0"),
         # CRM и ERP (21-30)
-        {"name": "CRM-воронка для Bitrix24", "description": "Кастомные отчеты по воронке продаж, визуализация этапов.", "price": 79000, "category": "CRM и ERP", "dev": dev_maria, "downloads": 234, "file_size": 5.2, "version": "1.5.0"},
-        {"name": "Модуль закупок для 1С", "description": "Автоматизация закупок, работа с поставщиками.", "price": 89000, "category": "CRM и ERP", "dev": dev_ivan, "downloads": 67, "file_size": 6.5, "version": "2.0.0"},
-        {"name": "Управление проектами в Bitrix24", "description": "Расширенный функционал для управления проектами.", "price": 49000, "category": "CRM и ERP", "dev": dev_alexey, "downloads": 178, "file_size": 3.2, "version": "1.3.0"},
-        {"name": "Складской учет в 1С", "description": "Адресное хранение, сборка заказов, инвентаризация.", "price": 69000, "category": "CRM и ERP", "dev": dev_ivan, "downloads": 92, "file_size": 4.8, "version": "1.8.0"},
-        {"name": "Модуль КДП для AmoCRM", "description": "Карточки договоров, этапы, уведомления.", "price": 35000, "category": "CRM и ERP", "dev": dev_maria, "downloads": 203, "file_size": 1.5, "version": "1.2.0"},
-        {"name": "Интеграция 1С с сайтом на Bitrix", "description": "Синхронизация заказов, товаров, остатков.", "price": 45000, "category": "CRM и ERP", "dev": dev_ivan, "downloads": 156, "file_size": 2.8, "version": "2.1.0"},
-        {"name": "Модуль командировок для 1С", "description": "Учет командировок, авансов, отчетов.", "price": 29000, "category": "CRM и ERP", "dev": dev_alexey, "downloads": 89, "file_size": 1.2, "version": "1.0.0"},
-        {"name": "Управление лидами в AmoCRM", "description": "Автораспределение лидов, скоринг, воронки.", "price": 38000, "category": "CRM и ERP", "dev": dev_maria, "downloads": 234, "file_size": 1.8, "version": "1.4.0"},
-        {"name": "Модуль кадрового учета", "description": "Штатное расписание, приказы, табель.", "price": 49000, "category": "CRM и ERP", "dev": dev_elena, "downloads": 67, "file_size": 3.5, "version": "1.1.0"},
-        {"name": "Управление складами (WMS)", "description": "Паллетное хранение, маркировка, сборка.", "price": 99000, "category": "CRM и ERP", "dev": dev_ivan, "downloads": 45, "file_size": 8.2, "version": "1.0.0"},
-        
+        ("CRM-воронка для Bitrix24", "Кастомные отчеты по воронке продаж, визуализация этапов.", 79000, "CRM и ERP", dev_maria, 234, 5.2, "1.5.0"),
+        ("Модуль закупок для 1С", "Автоматизация закупок, работа с поставщиками.", 89000, "CRM и ERP", dev_ivan, 67, 6.5, "2.0.0"),
+        ("Управление проектами в Bitrix24", "Расширенный функционал для управления проектами.", 49000, "CRM и ERP", dev_alexey, 178, 3.2, "1.3.0"),
+        ("Складской учет в 1С", "Адресное хранение, сборка заказов, инвентаризация.", 69000, "CRM и ERP", dev_ivan, 92, 4.8, "1.8.0"),
+        ("Модуль КДП для AmoCRM", "Карточки договоров, этапы, уведомления.", 35000, "CRM и ERP", dev_maria, 203, 1.5, "1.2.0"),
+        ("Интеграция 1С с сайтом на Bitrix", "Синхронизация заказов, товаров, остатков.", 45000, "CRM и ERP", dev_ivan, 156, 2.8, "2.1.0"),
+        ("Модуль командировок для 1С", "Учет командировок, авансов, отчетов.", 29000, "CRM и ERP", dev_alexey, 89, 1.2, "1.0.0"),
+        ("Управление лидами в AmoCRM", "Автораспределение лидов, скоринг, воронки.", 38000, "CRM и ERP", dev_maria, 234, 1.8, "1.4.0"),
+        ("Модуль кадрового учета", "Штатное расписание, приказы, табель.", 49000, "CRM и ERP", dev_elena, 67, 3.5, "1.1.0"),
+        ("Управление складами (WMS)", "Паллетное хранение, маркировка, сборка.", 99000, "CRM и ERP", dev_ivan, 45, 8.2, "1.0.0"),
         # Документооборот (31-35)
-        {"name": "Генератор коммерческих предложений", "description": "Автосборка КП из шаблонов, поддержка PDF, Excel.", "price": 25000, "category": "Документооборот", "dev": dev_maria, "downloads": 312, "file_size": 1.2, "version": "4.0.0"},
-        {"name": "Электронный документооборот (ЭДО)", "description": "Обмен документами с контрагентами через операторов ЭДО.", "price": 59000, "category": "Документооборот", "dev": dev_ivan, "downloads": 89, "file_size": 3.8, "version": "1.2.0"},
-        {"name": "Автоматизация договоров", "description": "Шаблоны, согласование, электронная подпись.", "price": 45000, "category": "Документооборот", "dev": dev_alexey, "downloads": 156, "file_size": 2.5, "version": "1.5.0"},
-        {"name": "Генератор счетов и актов", "description": "Автоматическое создание счетов и актов из CRM.", "price": 19000, "category": "Документооборот", "dev": dev_maria, "downloads": 234, "file_size": 0.8, "version": "2.0.0"},
-        {"name": "Модуль первичных документов", "description": "Счета-фактуры, накладные, УПД, ТОРГ-12.", "price": 35000, "category": "Документооборот", "dev": dev_elena, "downloads": 178, "file_size": 1.5, "version": "1.3.0"},
-        
+        ("Генератор коммерческих предложений", "Автосборка КП из шаблонов, поддержка PDF, Excel.", 25000, "Документооборот", dev_maria, 312, 1.2, "4.0.0"),
+        ("Электронный документооборот (ЭДО)", "Обмен документами с контрагентами через операторов ЭДО.", 59000, "Документооборот", dev_ivan, 89, 3.8, "1.2.0"),
+        ("Автоматизация договоров", "Шаблоны, согласование, электронная подпись.", 45000, "Документооборот", dev_alexey, 156, 2.5, "1.5.0"),
+        ("Генератор счетов и актов", "Автоматическое создание счетов и актов из CRM.", 19000, "Документооборот", dev_maria, 234, 0.8, "2.0.0"),
+        ("Модуль первичных документов", "Счета-фактуры, накладные, УПД, ТОРГ-12.", 35000, "Документооборот", dev_elena, 178, 1.5, "1.3.0"),
         # Финансы и налоги (36-40)
-        {"name": "Автоматическая выгрузка в ФНС", "description": "Отправка отчетности, поддержка XML, ЭЦП.", "price": 89000, "category": "Финансы и налоги", "dev": dev_ivan, "downloads": 92, "file_size": 3.2, "version": "3.0.0"},
-        {"name": "Интеграция с банками (API)", "description": "Выгрузка выписок, платежные поручения.", "price": 49000, "category": "Финансы и налоги", "dev": dev_maria, "downloads": 145, "file_size": 2.1, "version": "1.4.0"},
-        {"name": "Расчет зарплаты и налогов", "description": "Автоматический расчет зарплаты, НДФЛ, страховых.", "price": 69000, "category": "Финансы и налоги", "dev": dev_alexey, "downloads": 67, "file_size": 4.5, "version": "1.1.0"},
-        {"name": "Модуль НДС для 1С", "description": "Ведение книги покупок/продаж, расчет НДС.", "price": 39000, "category": "Финансы и налоги", "dev": dev_ivan, "downloads": 123, "file_size": 2.2, "version": "2.0.0"},
-        {"name": "Интеграция с ЕГАИС", "description": "Учет алкогольной продукции, отправка отчетов.", "price": 79000, "category": "Финансы и налоги", "dev": dev_maria, "downloads": 34, "file_size": 5.5, "version": "1.0.0"},
-        
+        ("Автоматическая выгрузка в ФНС", "Отправка отчетности, поддержка XML, ЭЦП.", 89000, "Финансы и налоги", dev_ivan, 92, 3.2, "3.0.0"),
+        ("Интеграция с банками (API)", "Выгрузка выписок, платежные поручения.", 49000, "Финансы и налоги", dev_maria, 145, 2.1, "1.4.0"),
+        ("Расчет зарплаты и налогов", "Автоматический расчет зарплаты, НДФЛ, страховых.", 69000, "Финансы и налоги", dev_alexey, 67, 4.5, "1.1.0"),
+        ("Модуль НДС для 1С", "Ведение книги покупок/продаж, расчет НДС.", 39000, "Финансы и налоги", dev_ivan, 123, 2.2, "2.0.0"),
+        ("Интеграция с ЕГАИС", "Учет алкогольной продукции, отправка отчетов.", 79000, "Финансы и налоги", dev_maria, 34, 5.5, "1.0.0"),
         # Автоматизация (41-45)
-        {"name": "Telegram-бот для корпоративного портала", "description": "Интеграция с Active Directory, запрос справок, отпусков.", "price": 38000, "category": "Автоматизация", "dev": dev_ivan, "downloads": 178, "file_size": 0.9, "version": "2.3.0"},
-        {"name": "RPA-робот для Excel", "description": "Автоматическая обработка Excel-отчетов.", "price": 29000, "category": "Автоматизация", "dev": dev_alexey, "downloads": 234, "file_size": 1.2, "version": "1.2.0"},
-        {"name": "Автоматическая рассылка отчетов", "description": "Отправка отчетов по email и Telegram по расписанию.", "price": 22000, "category": "Автоматизация", "dev": dev_maria, "downloads": 312, "file_size": 0.7, "version": "1.5.0"},
-        {"name": "Workflow-движок на Camunda", "description": "BPMN 2.0, согласование заявок, маршрутизация.", "price": 120000, "category": "Автоматизация", "dev": dev_maria, "downloads": 45, "file_size": 12.3, "version": "0.9.5"},
-        {"name": "Чат-бот для сайта (AI)", "description": "ИИ-бот для ответов на вопросы клиентов.", "price": 49000, "category": "Автоматизация", "dev": dev_alexey, "downloads": 89, "file_size": 2.8, "version": "1.0.0"},
-        
+        ("Telegram-бот для корпоративного портала", "Интеграция с Active Directory, запрос справок, отпусков.", 38000, "Автоматизация", dev_ivan, 178, 0.9, "2.3.0"),
+        ("RPA-робот для Excel", "Автоматическая обработка Excel-отчетов.", 29000, "Автоматизация", dev_alexey, 234, 1.2, "1.2.0"),
+        ("Автоматическая рассылка отчетов", "Отправка отчетов по email и Telegram по расписанию.", 22000, "Автоматизация", dev_maria, 312, 0.7, "1.5.0"),
+        ("Workflow-движок на Camunda", "BPMN 2.0, согласование заявок, маршрутизация.", 120000, "Автоматизация", dev_maria, 45, 12.3, "0.9.5"),
+        ("Чат-бот для сайта (AI)", "ИИ-бот для ответов на вопросы клиентов.", 49000, "Автоматизация", dev_alexey, 89, 2.8, "1.0.0"),
         # Маркетинг (46-50)
-        {"name": "Email-рассылка через Unisender", "description": "Автоматические триггерные рассылки.", "price": 25000, "category": "Маркетинг", "dev": dev_elena, "downloads": 156, "file_size": 1.1, "version": "1.3.0"},
-        {"name": "Сегментация клиентов (RFM)", "description": "RFM-анализ, сегментация клиентской базы.", "price": 32000, "category": "Маркетинг", "dev": dev_maria, "downloads": 203, "file_size": 1.5, "version": "1.2.0"},
-        {"name": "Автоворонка для Telegram", "description": "Создание цепочек сообщений, рассылок, опросов.", "price": 28000, "category": "Маркетинг", "dev": dev_ivan, "downloads": 234, "file_size": 0.8, "version": "1.4.0"},
-        {"name": "Сбор email-адресов с сайта", "description": "Виджеты, popup, интеграция с CRM.", "price": 18000, "category": "Маркетинг", "dev": dev_alexey, "downloads": 312, "file_size": 0.5, "version": "2.0.0"},
-        {"name": "Анализ конкурентов в соцсетях", "description": "Мониторинг активности конкурентов в VK, Telegram.", "price": 35000, "category": "Маркетинг", "dev": dev_elena, "downloads": 145, "file_size": 1.8, "version": "1.1.0"},
+        ("Email-рассылка через Unisender", "Автоматические триггерные рассылки.", 25000, "Маркетинг", dev_elena, 156, 1.1, "1.3.0"),
+        ("Сегментация клиентов (RFM)", "RFM-анализ, сегментация клиентской базы.", 32000, "Маркетинг", dev_maria, 203, 1.5, "1.2.0"),
+        ("Автоворонка для Telegram", "Создание цепочек сообщений, рассылок, опросов.", 28000, "Маркетинг", dev_ivan, 234, 0.8, "1.4.0"),
+        ("Сбор email-адресов с сайта", "Виджеты, popup, интеграция с CRM.", 18000, "Маркетинг", dev_alexey, 312, 0.5, "2.0.0"),
+        ("Анализ конкурентов в соцсетях", "Мониторинг активности конкурентов в VK, Telegram.", 35000, "Маркетинг", dev_elena, 145, 1.8, "1.1.0"),
     ]
     
-    for p_data in products_data:
-        product = models.Product(
-            name=p_data["name"],
-            description=p_data["description"],
-            price=p_data["price"],
-            category=p_data["category"],
-            developer_id=p_data["dev"].id,
-            download_url=f"https://example.com/download/{p_data['name'].lower().replace(' ', '_')}",
-            file_size=p_data["file_size"],
-            version=p_data["version"],
-            downloads_count=p_data["downloads"],
-            is_active=True,
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
-        )
-        db.add(product)
+    for name, desc, price, category, developer, downloads, file_size, version in products_data:
+        # Проверяем, существует ли уже продукт
+        existing_product = db.query(models.Product).filter(models.Product.name == name).first()
+        if not existing_product:
+            product = models.Product(
+                name=name,
+                description=desc,
+                price=price,
+                category=category,
+                developer_id=developer.id,
+                download_url=f"https://example.com/download/{name.lower().replace(' ', '_')}",
+                file_size=file_size,
+                version=version,
+                downloads_count=downloads,
+                is_active=True,
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow()
+            )
+            db.add(product)
     db.commit()
-    print(f"✅ Добавлено {len(products_data)} продуктов")
-    
-    # Итоговая статистика
+    print(f"✅ Продукты добавлены (всего: {len(products_data)})")
+
+    # --- 4. Итоговая статистика ---
     print("\n" + "=" * 60)
     print("ИТОГОВАЯ СТАТИСТИКА")
     print("=" * 60)
