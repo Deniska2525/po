@@ -139,15 +139,11 @@ const performSearch = () => {
   if (filters.value.category) searchFilters.category = filters.value.category;
   if (filters.value.minPrice) searchFilters.min_price = filters.value.minPrice * 100;
   if (filters.value.maxPrice) searchFilters.max_price = filters.value.maxPrice * 100;
-
-  // Поиск по тегам (если пользователь ввел #)
-  let query = searchQuery.value;
-  if (query.startsWith('#')) {
-    searchFilters.tag = query.substring(1);
-    query = '';
-  }
   
-  productsStore.searchProducts(searchQuery.value, searchFilters);
+  // Приводим поисковый запрос к нижнему регистру (но бэкенд уже делает ilike)
+  const query = searchQuery.value;
+  
+  productsStore.searchProducts(query, searchFilters);
 };
 
 const applyFilters = () => {
