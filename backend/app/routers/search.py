@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from typing import List, Optional
 from .. import models, schemas
 from ..database import get_db
@@ -15,13 +15,15 @@ def search_products(
     max_price: Optional[int] = None,
     db: Session = Depends(get_db)
 ):
-    query = db.query(models.Product)
+    query = db.query(models.Product).filter(models.Product.is_active == True)
     
     if q:
+        # Регистронезависимый поиск через ILIKE (для PostgreSQL) или LIKE (для SQLite)
+        search_term = f"%{q}%"
         search_filter = or_(
-            models.Product.name.contains(q),
-            models.Product.description.contains(q),
-            models.Product.category.contains(q)
+            models.Product.name.ilike(search_term),  # ilike = регистронезависимый
+            models.Product.description.ilike(search_term),
+            models.Product.category.ilike(search_term)
         )
         query = query.filter(search_filter)
     
@@ -39,4 +41,4 @@ def search_products(
 @router.get("/categories")
 def get_categories(db: Session = Depends(get_db)):
     categories = db.query(models.Product.category).distinct().all()
-    return [cat[0] for cat in categories]
+    return [cat[0] for cat in categories if cat[0]]
