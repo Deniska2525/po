@@ -27,6 +27,16 @@ except Exception as e:
     print(f"❌ Ошибка подключения к БД: {e}")
     exit(1)
 
+
+db_path = engine.url.database
+print(f"Путь к базе данных: {db_path}")
+
+if os.path.exists(db_path):
+    print(f"Удаление существующего файла БД...")
+    os.remove(db_path)
+    print("✅ Файл удален")
+
+
 # Создаем таблицы (только если их нет)
 print("Создание таблиц (если не существуют)...")
 Base.metadata.create_all(bind=engine)
