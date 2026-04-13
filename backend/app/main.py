@@ -45,13 +45,7 @@ print("✅ Таблицы созданы/проверены")
 db = SessionLocal()
 
 try:
-    # Проверяем, есть ли уже данные
-    users_count = db.query(models.User).count()
-    products_count = db.query(models.Product).count()
     
-    print(f"📊 Текущие данные: пользователей={users_count}, продуктов={products_count}")
-    
-    if users_count == 0 and products_count == 0:
         print("Заполнение базы данных тестовыми данными...")
         
         # Создание категорий
