@@ -18,10 +18,8 @@ def track_download(
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     
-    # Увеличиваем счетчик скачиваний
     product.downloads_count += 1
     
-    # Создаем запись о скачивании
     download = models.Download(
         user_id=current_user.id,
         product_id=download_data.product_id,
@@ -32,7 +30,6 @@ def track_download(
     db.add(download)
     db.commit()
     
-    # Возвращаем URL для скачивания
     return {
         "download_url": product.download_url,
         "message": "Download tracked successfully"
@@ -49,11 +46,9 @@ def get_product_download_stats(
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     
-    # Проверка прав (только разработчик продукта или админ)
     if product.developer_id != current_user.id and current_user.role not in ["admin", "superuser"]:
         raise HTTPException(status_code=403, detail="Not enough permissions")
     
-    # Статистика по дням за последние 30 дней
     from datetime import datetime, timedelta
     from sqlalchemy import func
     
