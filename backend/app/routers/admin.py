@@ -57,7 +57,7 @@ def get_dashboard_stats(
 
 @router.get("/revenue", response_model=schemas.RevenueStats)
 def get_revenue_stats(
-    period: str = Query("month", regex="^(day|month|year)$"),
+    period: str = Query("month", pattern="^(day|month|year)$"),
     db: Session = Depends(get_db),
     admin: models.User = Depends(check_admin)
 ):
