@@ -35,27 +35,26 @@ class AdminService {
     
     const { data } = await api.get(`/admin/products?${queryParams.toString()}`)
     return data
-  },
+  }
   async toggleProductStatus(productId) {
     const { data } = await api.put(`/admin/products/${productId}/toggle`)
     return data
-  },
+  }
 
   async deleteProduct(productId) {
     const { data } = await api.delete(`/admin/products/${productId}`)
     return data
-  },
+  }
 
   async createProduct(productData) {
     const { data } = await api.post('/products/', productData)
     return data
-  },
+  }
 
   async updateProduct(productId, productData) {
     const { data } = await api.put(`/products/${productId}`, productData)
     return data
   }
-  
   
   async getCategories() {
     const { data } = await api.get('/admin/categories')
