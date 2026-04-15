@@ -2,9 +2,19 @@ import api from './api'
 
 class AdminService {
   async getUsers(params = {}) {
-    const query = new URLSearchParams(params).toString()
-    const { data } = await api.get(`/admin/users?${query}`)
-    return data
+    try {
+      const queryParams = new URLSearchParams()
+      if (params.role) queryParams.append('role', params.role)
+      if (params.search) queryParams.append('search', params.search)
+      if (params.limit) queryParams.append('limit', params.limit)
+      if (params.skip) queryParams.append('skip', params.skip)
+      
+      const response = await api.get(`/admin/users?${queryParams.toString()}`)
+      return response.data
+    } catch (error) {
+      console.error('Error fetching users:', error)
+      throw error
+      }
   }
   
   async updateUserRole(userId, role) {
