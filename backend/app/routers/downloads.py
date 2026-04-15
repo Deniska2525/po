@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from .. import models, schemas, auth
 from ..database import get_db
-from datetime import datetime
+from datetime import datetime, timedelta
+from sqlalchemy import func
 
 router = APIRouter(prefix="/downloads", tags=["downloads"])
 
@@ -48,9 +49,6 @@ def get_product_download_stats(
     
     if product.developer_id != current_user.id and current_user.role not in ["admin", "superuser"]:
         raise HTTPException(status_code=403, detail="Not enough permissions")
-    
-    from datetime import datetime, timedelta
-    from sqlalchemy import func
     
     thirty_days_ago = datetime.utcnow() - timedelta(days=30)
     
