@@ -12,45 +12,66 @@
       <p>Загрузка категорий...</p>
     </div>
 
-    <div v-else class="categories-grid">
-      <div v-for="category in categories" :key="category.id" class="category-card">
-        <div class="category-icon">{{ category.icon || '📁' }}</div>
-        <div class="category-info">
-          <h3>{{ category.name }}</h3>
-          <p>{{ category.description || 'Нет описания' }}</p>
-          <span class="product-count">{{ category.product_count || 0 }} продуктов</span>
-        </div>
-        <button class="delete-category" @click="confirmDeleteCategory(category)" title="Удалить">
-          🗑️
-        </button>
-      </div>
+    <div v-else class="categories-table-container">
+      <table class="categories-table">
+        <thead>
+          <tr>
+            <th style="width: 10%">ID</th>
+            <th style="width: 15%">Иконка</th>
+            <th style="width: 25%">Название</th>
+            <th style="width: 35%">Описание</th>
+            <th style="width: 15%">Действия</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="category in categories" :key="category.id">
+            <td class="category-id">#{{ category.id }}</td>
+            <td class="category-icon">{{ category.icon || '📁' }}</td>
+            <td class="category-name">{{ category.name }}</td>
+            <td class="category-description">{{ category.description || '—' }}</td>
+            <td class="actions">
+              <button class="edit-btn" @click="editCategory(category)" title="Редактировать">
+                ✏️
+              </button>
+              <button 
+                class="delete-btn" 
+                @click="confirmDeleteCategory(category)"
+                title="Удалить"
+                :disabled="category.product_count > 0"
+              >
+                🗑️
+              </button>
+            </td>
+          </tr>
+        </tbody>
+       </table>
     </div>
 
-    <!-- Модальное окно создания категории -->
-    <div v-if="showCreateModal" class="modal">
+    <!-- Модальное окно создания/редактирования -->
+    <div v-if="showModal" class="modal">
       <div class="modal-content">
-        <h3>Создать категорию</h3>
+        <h3>{{ editingCategory ? 'Редактировать' : 'Создать' }} категорию</h3>
         
         <div class="form-group">
           <label>Название *</label>
-          <input v-model="newCategory.name" required>
+          <input v-model="form.name" required>
         </div>
         
         <div class="form-group">
           <label>Описание</label>
-          <textarea v-model="newCategory.description" rows="3"></textarea>
+          <textarea v-model="form.description" rows="3"></textarea>
         </div>
         
         <div class="form-group">
           <label>Иконка (эмодзи)</label>
-          <input v-model="newCategory.icon" placeholder="📁">
+          <input v-model="form.icon" placeholder="📁">
         </div>
         
         <div class="modal-actions">
-          <button class="save-btn" @click="createCategory" :disabled="saving">
-            {{ saving ? 'Создание...' : 'Создать' }}
+          <button class="save-btn" @click="saveCategory" :disabled="saving">
+            {{ saving ? 'Сохранение...' : 'Сохранить' }}
           </button>
-          <button class="cancel-btn" @click="showCreateModal = false">Отмена</button>
+          <button class="cancel-btn" @click="closeModal">Отмена</button>
         </div>
       </div>
     </div>
@@ -58,77 +79,106 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import adminService from '../services/admin';
+import { ref, onMounted } from 'vue'
+import adminService from '../services/admin'
 
-const categories = ref([]);
-const loading = ref(true);
-const saving = ref(false);
-const showCreateModal = ref(false);
-const newCategory = ref({
+const categories = ref([])
+const loading = ref(true)
+const saving = ref(false)
+const showModal = ref(false)
+const editingCategory = ref(null)
+
+const form = ref({
   name: '',
   description: '',
   icon: '📁'
-});
+})
 
 const loadCategories = async () => {
-  loading.value = true;
+  loading.value = true
   try {
-    categories.value = await adminService.getCategories();
+    categories.value = await adminService.getCategories()
   } catch (error) {
-    console.error('Error loading categories:', error);
+    console.error('Error loading categories:', error)
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
 const openCreateModal = () => {
-  newCategory.value = {
+  editingCategory.value = null
+  form.value = {
     name: '',
     description: '',
     icon: '📁'
-  };
-  showCreateModal.value = true;
-};
-
-const createCategory = async () => {
-  if (!newCategory.value.name) return;
-  
-  saving.value = true;
-  try {
-    await adminService.createCategory(newCategory.value);
-    showCreateModal.value = false;
-    await loadCategories();
-  } catch (error) {
-    console.error('Error creating category:', error);
-  } finally {
-    saving.value = false;
   }
-};
+  showModal.value = true
+}
+
+const editCategory = (category) => {
+  editingCategory.value = category
+  form.value = {
+    name: category.name,
+    description: category.description || '',
+    icon: category.icon || '📁'
+  }
+  showModal.value = true
+}
+
+const saveCategory = async () => {
+  if (!form.value.name.trim()) {
+    alert('Введите название категории')
+    return
+  }
+  
+  saving.value = true
+  try {
+    if (editingCategory.value) {
+      // Обновление категории
+      await adminService.updateCategory(editingCategory.value.id, form.value)
+    } else {
+      // Создание новой
+      await adminService.createCategory(form.value)
+    }
+    closeModal()
+    await loadCategories()
+  } catch (error) {
+    console.error('Error saving category:', error)
+    alert(error.response?.data?.detail || 'Ошибка при сохранении')
+  } finally {
+    saving.value = false
+  }
+}
 
 const confirmDeleteCategory = (category) => {
   if (category.product_count > 0) {
-    alert(`Нельзя удалить категорию "${category.name}", так как в ней есть продукты`);
-    return;
+    alert(`Нельзя удалить категорию "${category.name}", так как в ней есть продукты`)
+    return
   }
   
   if (confirm(`Удалить категорию "${category.name}"?`)) {
-    deleteCategory(category.id);
+    deleteCategory(category.id)
   }
-};
+}
 
 const deleteCategory = async (categoryId) => {
   try {
-    await adminService.deleteCategory(categoryId);
-    await loadCategories();
+    await adminService.deleteCategory(categoryId)
+    await loadCategories()
   } catch (error) {
-    console.error('Error deleting category:', error);
+    console.error('Error deleting category:', error)
+    alert(error.response?.data?.detail || 'Ошибка при удалении')
   }
-};
+}
+
+const closeModal = () => {
+  showModal.value = false
+  editingCategory.value = null
+}
 
 onMounted(() => {
-  loadCategories();
-});
+  loadCategories()
+})
 </script>
 
 <style scoped>
@@ -142,10 +192,12 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .page-header h2 {
-  color: #1a2634;
+  color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -159,9 +211,6 @@ onMounted(() => {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .add-btn:hover {
@@ -169,19 +218,110 @@ onMounted(() => {
   box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
 }
 
+.categories-table-container {
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  overflow-x: auto;
+}
+
+.categories-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.categories-table th {
+  text-align: left;
+  padding: 1rem;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.categories-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.categories-table tr:hover {
+  background: var(--hover-bg);
+}
+
+.category-id {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.category-icon {
+  font-size: 1.5rem;
+}
+
+.category-name {
+  font-weight: 600;
+}
+
+.category-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.edit-btn, .delete-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.edit-btn {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.edit-btn:hover {
+  background: var(--border-color);
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}
+
+.delete-btn:hover:not(:disabled) {
+  background: #fdd;
+  transform: scale(1.05);
+}
+
+.delete-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .loading-state {
   text-align: center;
   padding: 3rem;
-  background: white;
+  background: var(--card-bg);
   border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .spinner {
   width: 40px;
   height: 40px;
   margin: 0 auto 1rem;
-  border: 3px solid #f1f5f9;
+  border: 3px solid var(--border-color);
   border-top-color: #2ecc71;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -191,87 +331,14 @@ onMounted(() => {
   to { transform: rotate(360deg); }
 }
 
-.categories-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-}
-
-.category-card {
-  background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  border: 1px solid #eaeef2;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  transition: all 0.2s;
-}
-
-.category-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(46, 204, 113, 0.1);
-  border-color: #2ecc71;
-}
-
-.category-icon {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  color: #2ecc71;
-}
-
-.category-info {
-  flex: 1;
-}
-
-.category-info h3 {
-  margin: 0 0 0.25rem 0;
-  color: #1a2634;
-  font-size: 1.1rem;
-}
-
-.category-info p {
-  margin: 0 0 0.5rem 0;
-  color: #4a5568;
-  font-size: 0.9rem;
-}
-
-.product-count {
-  font-size: 0.85rem;
-  color: #94a3b8;
-}
-
-.delete-category {
-  width: 36px;
-  height: 36px;
-  border: none;
-  background: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  opacity: 0.5;
-  transition: all 0.2s;
-}
-
-.delete-category:hover {
-  opacity: 1;
-  background: #fee;
-}
-
+/* Модальное окно */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: var(--modal-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -280,17 +347,19 @@ onMounted(() => {
 }
 
 .modal-content {
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: 16px;
   width: 90%;
-  max-width: 500px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  max-width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
 }
 
 .modal-content h3 {
   margin-bottom: 1.5rem;
-  color: #1a2634;
+  color: var(--text-primary);
 }
 
 .form-group {
@@ -300,7 +369,7 @@ onMounted(() => {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #4a5568;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -308,10 +377,11 @@ onMounted(() => {
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #e0e7ed;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
+  background: var(--input-bg);
+  color: var(--text-primary);
   font-size: 1rem;
-  transition: all 0.2s;
 }
 
 .form-group input:focus,
@@ -334,7 +404,6 @@ onMounted(() => {
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
 }
 
 .save-btn {
@@ -352,11 +421,17 @@ onMounted(() => {
 }
 
 .cancel-btn {
-  background: #f1f5f9;
-  color: #4a5568;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
 }
 
-.cancel-btn:hover {
-  background: #e2e8f0;
+@media (max-width: 768px) {
+  .categories-table-container {
+    overflow-x: scroll;
+  }
+  
+  .categories-table {
+    min-width: 600px;
+  }
 }
 </style>
