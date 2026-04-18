@@ -1,8 +1,8 @@
 .product-card {
-  background: var(--card-bg);
+  background: var(--bg-card);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--card-shadow);
+  box-shadow: var(--shadow-sm);
   transition: all 0.2s;
   border: 1px solid var(--border-color);
   display: flex;
@@ -12,8 +12,8 @@
 
 .product-card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--card-hover-shadow);
-  border-color: #2ecc71;
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border-hover);
 }
 
 .product-card.grid-3-view { padding: 1.25rem; }
@@ -111,7 +111,7 @@
 .product-price {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #2ecc71;
+  color: var(--primary-color);
   line-height: 1;
 }
 
@@ -120,8 +120,8 @@
 .cart-btn {
   padding: 0.5rem 1rem;
   background: transparent;
-  border: 1px solid #2ecc71;
-  color: #2ecc71;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
   border-radius: 8px;
   cursor: pointer;
   font-size: 0.85rem;
@@ -130,13 +130,13 @@
 }
 
 .cart-btn:hover {
-  background: #2ecc71;
+  background: var(--primary-color);
   color: white;
 }
 
 .download-btn {
   padding: 0.5rem 1rem;
-  background: #2ecc71;
+  background: var(--primary-color);
   color: white;
   border: none;
   border-radius: 8px;
@@ -147,19 +147,19 @@
 }
 
 .download-btn:hover {
-  background: #27ae60;
+  background: var(--primary-hover);
 }
 
 .build-note {
   margin-top: 0.75rem;
   padding: 0.5rem;
-  background: var(--note-bg);
+  background: var(--warning-bg);
   border-radius: 8px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.7rem;
-  color: var(--note-text);
+  color: var(--warning-text);
 }
 
 .list-view .build-note {
