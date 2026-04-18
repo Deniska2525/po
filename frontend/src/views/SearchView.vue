@@ -450,4 +450,25 @@ watch(viewMode, (newMode) => {
     grid-template-columns: 1fr;
   }
 }
+
+[data-theme="dark"] .search-content {
+  background-color: transparent;
+}
+
+[data-theme="dark"] .filters {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .results-header {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .filter-group select,
+[data-theme="dark"] .filter-group input {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
 </style>
