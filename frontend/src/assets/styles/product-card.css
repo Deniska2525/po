@@ -16,6 +16,17 @@
   border-color: var(--border-hover);
 }
 
+/* Темная тема для карточек */
+[data-theme="dark"] .product-card {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .product-card:hover {
+  border-color: var(--primary-color);
+}
+
+/* Остальные стили без изменений */
 .product-card.grid-3-view { padding: 1.25rem; }
 .product-card.grid-2-view { padding: 1.5rem; }
 .product-card.list-view { padding: 1.5rem; flex-direction: row; gap: 2rem; }
