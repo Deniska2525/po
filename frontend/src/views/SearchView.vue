@@ -452,23 +452,7 @@ watch(viewMode, (newMode) => {
 }
 
 [data-theme="dark"] .search-content {
-  background-color: transparent;
+  background-color: var(--bg-secondary);
 }
 
-[data-theme="dark"] .filters {
-  background: var(--bg-card);
-  border-color: var(--border-color);
-}
-
-[data-theme="dark"] .results-header {
-  background: var(--bg-card);
-  border-color: var(--border-color);
-}
-
-[data-theme="dark"] .filter-group select,
-[data-theme="dark"] .filter-group input {
-  background: var(--input-bg);
-  border-color: var(--input-border);
-  color: var(--text-primary);
-}
 </style>
