@@ -7,12 +7,7 @@
     
     <div class="card-content">
       <p class="product-description">{{ truncatedDescription }}</p>
-      
-      <div class="product-tags">
-        <span class="component-badge">🧩 Компонент</span>
-        <span v-if="product.category.includes('Интеграция')" class="integration-badge">🔌 Готов к интеграции</span>
-      </div>
-      
+            
       <div class="product-meta">
         <div class="meta-row">
           <span class="developer">👨‍💻 {{ developerName }}</span>
