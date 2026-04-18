@@ -34,11 +34,6 @@
           <button class="download-btn" @click="handleDownload">📦 Скачать</button>
         </div>
       </div>
-      
-      <div class="build-note">
-        <span>🔧</span>
-        <span>Можно комбинировать с другими компонентами</span>
-      </div>
     </div>
   </div>
 </template>
