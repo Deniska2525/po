@@ -1,10 +1,10 @@
 .home {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: var(--bg-secondary);
 }
 
 .hero {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  background: var(--hero-gradient);
   color: white;
   text-align: center;
   padding: 4rem 2rem;
@@ -36,6 +36,8 @@
   border-radius: 50px;
   font-size: 1rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: white;
+  color: #1a2634;
 }
 
 .hero-search input:focus {
@@ -46,7 +48,7 @@
 .hero-search button {
   padding: 1rem 2.5rem;
   background-color: white;
-  color: #2ecc71;
+  color: var(--primary-color);
   border: none;
   border-radius: 50px;
   font-size: 1rem;
@@ -75,7 +77,7 @@
 }
 
 .section-header h2 {
-  color: #1a2634;
+  color: var(--text-primary);
   font-size: 2rem;
   font-weight: 600;
 }
@@ -107,8 +109,8 @@
 .spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #f1f5f9;
-  border-top-color: #2ecc71;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
