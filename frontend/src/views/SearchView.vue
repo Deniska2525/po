@@ -451,7 +451,8 @@ watch(viewMode, (newMode) => {
   }
 }
 
-[data-theme="dark"] .search-content {
+[data-theme="dark"] .search-content,
+[data-theme="dark"] .search-page {
   background-color: var(--bg-secondary);
 }
 
