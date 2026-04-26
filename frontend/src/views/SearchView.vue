@@ -461,4 +461,9 @@ watch(viewMode, (newMode) => {
   color: #fff;
 }
 
+[data-theme="dark"] .filters h3 {
+  color: #4a5568;
+}
+
+
 </style>
