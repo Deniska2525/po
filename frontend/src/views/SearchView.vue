@@ -457,6 +457,7 @@ watch(viewMode, (newMode) => {
   background-color: var(--bg-secondary);
 }
 
+[data-theme="dark"] .results-header,
 [data-theme="dark"] .filters {
   color: #fff;
 }
@@ -465,5 +466,7 @@ watch(viewMode, (newMode) => {
   color: #4a5568;
 }
 
-
+[data-theme="dark"] .results-header {
+  background-color: #1e293b;
+}
 </style>
