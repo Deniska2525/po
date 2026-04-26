@@ -452,8 +452,13 @@ watch(viewMode, (newMode) => {
 }
 
 [data-theme="dark"] .search-content,
-[data-theme="dark"] .search-page {
+[data-theme="dark"] .search-page,
+[data-theme="dark"] .filters {
   background-color: var(--bg-secondary);
+}
+
+[data-theme="dark"] .filters {
+  color: #fff;
 }
 
 </style>
