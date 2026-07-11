@@ -36,6 +36,8 @@
   --danger-text: #e74c3c;
   --info-bg: #e3f2fd;
   --info-text: #2196f3;
+  --purple-bg: #f3e5f5;
+  --purple-text: #9c27b0;
   
   --hover-bg: #f8fafc;
   --hero-gradient: linear-gradient(135deg, #2ecc71, #27ae60);
@@ -86,6 +88,8 @@
   --danger-text: #f87171;
   --info-bg: #1e2a3d;
   --info-text: #60a5fa;
+  --purple-bg: #2e1e3d;
+  --purple-text: #c084fc;
   
   --hover-bg: #334155;
   --hero-gradient: linear-gradient(135deg, #229954, #1e8449);

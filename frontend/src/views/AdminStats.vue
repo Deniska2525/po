@@ -146,16 +146,16 @@ onMounted(() => {
 }
 
 .stats-header h2 {
-  color: #1a2634;
+  color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 600;
 }
 
 .period-select {
   padding: 0.5rem 2rem 0.5rem 1rem;
-  border: 1px solid #e0e7ed;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: white;
+  background: var(--bg-card);
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -166,13 +166,13 @@ onMounted(() => {
 
 .period-select:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
 }
 
 .loading-state {
   text-align: center;
   padding: 3rem;
-  background: white;
+  background: var(--bg-card);
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
@@ -181,8 +181,8 @@ onMounted(() => {
   width: 40px;
   height: 40px;
   margin: 0 auto 1rem;
-  border: 3px solid #f1f5f9;
-  border-top-color: #2ecc71;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -199,11 +199,11 @@ onMounted(() => {
 }
 
 .stat-card {
-  background: white;
+  background: var(--bg-card);
   padding: 1.5rem;
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  border: 1px solid #eaeef2;
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -213,7 +213,7 @@ onMounted(() => {
 .stat-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 16px rgba(46, 204, 113, 0.1);
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
 }
 
 .stat-icon {
@@ -227,12 +227,12 @@ onMounted(() => {
 .stat-value {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #2ecc71;
+  color: var(--primary-color);
   line-height: 1.2;
 }
 
 .stat-label {
-  color: #4a5568;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -244,16 +244,16 @@ onMounted(() => {
 }
 
 .chart-container {
-  background: white;
+  background: var(--bg-card);
   padding: 1.5rem;
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  border: 1px solid #eaeef2;
+  border: 1px solid var(--border-color);
 }
 
 .chart-container h3 {
   margin-bottom: 1rem;
-  color: #1a2634;
+  color: var(--text-primary);
   font-size: 1.1rem;
 }
 
@@ -270,41 +270,41 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem;
-  background: #f8fafc;
+  background: var(--bg-tertiary);
   border-radius: 8px;
   transition: background 0.2s;
 }
 
 .popular-item:hover,
 .order-item:hover {
-  background: #e8f5e9;
+  background: var(--success-bg);
 }
 
 .rank {
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--text-muted);
   min-width: 30px;
 }
 
 .product-name {
   flex: 1;
-  color: #1a2634;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
 .product-count {
-  color: #2ecc71;
+  color: var(--primary-color);
   font-weight: 600;
 }
 
 .order-id {
-  color: #4a5568;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .order-amount {
   font-weight: 600;
-  color: #1a2634;
+  color: var(--text-primary);
 }
 
 .order-status {
@@ -315,38 +315,38 @@ onMounted(() => {
 }
 
 .order-status.completed {
-  background: #e8f5e9;
-  color: #2ecc71;
+  background: var(--success-bg);
+  color: var(--primary-color);
 }
 
 .order-status.pending {
-  background: #fff3e0;
-  color: #f39c12;
+  background: var(--warning-bg);
+  color: var(--warning-text);
 }
 
 .order-status.cancelled {
-  background: #fee;
-  color: #e74c3c;
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
 
 .no-data {
   text-align: center;
   padding: 2rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-style: italic;
 }
 
 .revenue-chart {
-  background: white;
+  background: var(--bg-card);
   padding: 1.5rem;
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  border: 1px solid #eaeef2;
+  border: 1px solid var(--border-color);
 }
 
 .revenue-chart h3 {
   margin-bottom: 1.5rem;
-  color: #1a2634;
+  color: var(--text-primary);
 }
 
 .chart-placeholder {
@@ -371,7 +371,7 @@ onMounted(() => {
 
 .bar {
   width: 100%;
-  background: linear-gradient(to top, #2ecc71, #27ae60);
+  background: linear-gradient(to top, var(--primary-color), var(--primary-hover));
   border-radius: 4px 4px 0 0;
   min-height: 20px;
   transition: height 0.3s;
@@ -379,7 +379,7 @@ onMounted(() => {
 
 .bar-label {
   font-size: 0.8rem;
-  color: #4a5568;
+  color: var(--text-secondary);
   transform: rotate(-45deg);
   white-space: nowrap;
 }
@@ -387,6 +387,6 @@ onMounted(() => {
 .bar-value {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #2ecc71;
+  color: var(--primary-color);
 }
 </style>

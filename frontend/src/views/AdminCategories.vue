@@ -204,7 +204,7 @@ onMounted(() => {
 
 .add-btn {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  background: var(--hero-gradient);
   color: white;
   border: none;
   border-radius: 8px;
@@ -301,7 +301,7 @@ onMounted(() => {
 }
 
 .delete-btn:hover:not(:disabled) {
-  background: #fdd;
+  background: var(--danger-bg);
   transform: scale(1.05);
 }
 
@@ -322,7 +322,7 @@ onMounted(() => {
   height: 40px;
   margin: 0 auto 1rem;
   border: 3px solid var(--border-color);
-  border-top-color: #2ecc71;
+  border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -387,7 +387,7 @@ onMounted(() => {
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
 }
 
@@ -407,12 +407,12 @@ onMounted(() => {
 }
 
 .save-btn {
-  background: #2ecc71;
+  background: var(--primary-color);
   color: white;
 }
 
 .save-btn:hover:not(:disabled) {
-  background: #27ae60;
+  background: var(--primary-hover);
 }
 
 .save-btn:disabled {

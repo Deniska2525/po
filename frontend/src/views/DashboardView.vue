@@ -216,7 +216,7 @@ onMounted(() => {
 <style scoped>
 .dashboard {
   min-height: 100vh;
-  background-color: #f9f9f9;
+  background-color: var(--bg-tertiary);
   padding: 2rem;
 }
 
@@ -229,12 +229,12 @@ onMounted(() => {
 }
 
 .dashboard-header h1 {
-  color: #333;
+  color: var(--text-primary);
 }
 
 .add-btn {
   padding: 0.75rem 1.5rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -245,13 +245,13 @@ onMounted(() => {
 }
 
 .add-btn:hover {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
 }
 
 .products-list {
   max-width: 1200px;
   margin: 0 auto;
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 8px;
   padding: 2rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -259,7 +259,7 @@ onMounted(() => {
 
 .products-list h2 {
   margin-bottom: 1.5rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .products-grid {
@@ -272,29 +272,29 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border: 1px solid #eee;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   transition: background-color 0.3s;
 }
 
 .product-item:hover {
-  background-color: #f9f9f9;
+  background-color: var(--bg-tertiary);
 }
 
 .product-info h3 {
   margin-bottom: 0.25rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .product-category {
-  color: #2ecc71;
+  color: var(--primary-color);
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
 }
 
 .product-price {
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .product-actions {
@@ -313,7 +313,7 @@ onMounted(() => {
 }
 
 .edit-btn {
-  background-color: #f39c12;
+  background-color: var(--warning-text);
   color: white;
 }
 
@@ -322,7 +322,7 @@ onMounted(() => {
 }
 
 .delete-btn {
-  background-color: #e74c3c;
+  background-color: var(--danger-text);
   color: white;
 }
 
@@ -334,13 +334,13 @@ onMounted(() => {
 .no-products {
   text-align: center;
   padding: 3rem;
-  color: #999;
+  color: var(--text-muted);
 }
 
 .add-first-btn {
   margin-top: 1rem;
   padding: 0.75rem 1.5rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -354,7 +354,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0,0,0,0.5);
+  background-color: var(--modal-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -362,7 +362,7 @@ onMounted(() => {
 }
 
 .modal-content {
-  background-color: white;
+  background-color: var(--bg-card);
   padding: 2rem;
   border-radius: 8px;
   width: 90%;
@@ -373,7 +373,7 @@ onMounted(() => {
 
 .modal-content h2 {
   margin-bottom: 1.5rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .form-group {
@@ -383,7 +383,7 @@ onMounted(() => {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #666;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -391,7 +391,7 @@ onMounted(() => {
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
 }
@@ -399,7 +399,7 @@ onMounted(() => {
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
 }
 
 .modal-actions {
@@ -418,26 +418,26 @@ onMounted(() => {
 }
 
 .modal-actions button[type="submit"] {
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
 }
 
 .modal-actions button[type="submit"]:hover {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
 }
 
 .cancel-btn {
-  background-color: #e0e0e0;
-  color: #666;
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
 }
 
 .cancel-btn:hover {
-  background-color: #d0d0d0;
+  background-color: var(--border-color);
 }
 
 .error-message {
-  background-color: #fee;
-  color: #e74c3c;
+  background-color: var(--danger-bg);
+  color: var(--danger-text);
   padding: 0.75rem;
   border-radius: 4px;
   margin-bottom: 1rem;

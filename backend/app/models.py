@@ -52,8 +52,8 @@ class Product(Base):
     version = Column(String, nullable=True)
     downloads_count = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
+    tags = Column(String, nullable=True)  # теги через запятую, см. get_tags_list()
 
-    
     developer = relationship("User", back_populates="products")
     orders = relationship("Order", secondary=order_items, back_populates="products")
     downloads = relationship("Download", back_populates="product")

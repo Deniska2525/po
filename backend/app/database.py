@@ -3,8 +3,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# Используем переменную окружения или путь по умолчанию
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://marketplace_ix5t_user:4uROQjHkzUjXyfjtaj5IhVLuSBUfZ4xb@dpg-d7933r0gjchc73fcijug-a/marketplace_ix5t")
+# DATABASE_URL обязательно берём из окружения — никаких секретов в коде.
+# Локально задайте её в .env (см. .env.example) или в переменных окружения shell.
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL не задана. Установите переменную окружения DATABASE_URL "
+        "(например: postgresql://user:password@host/dbname)"
+    )
 
 # Для PostgreSQL нужно добавить sslmode
 if "postgresql" in DATABASE_URL and "sslmode" not in DATABASE_URL:

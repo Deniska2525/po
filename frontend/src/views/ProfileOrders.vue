@@ -92,13 +92,13 @@ onMounted(() => {
 
 h2 {
   margin-bottom: 2rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .no-orders {
   text-align: center;
   padding: 3rem;
-  background: white;
+  background: var(--bg-card);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -107,7 +107,7 @@ h2 {
   display: inline-block;
   margin-top: 1rem;
   padding: 0.75rem 1.5rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   text-decoration: none;
   border-radius: 4px;
@@ -120,7 +120,7 @@ h2 {
 }
 
 .order-card {
-  background: white;
+  background: var(--bg-card);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   overflow: hidden;
@@ -128,20 +128,20 @@ h2 {
 
 .order-header {
   padding: 1rem;
-  background-color: #f9f9f9;
+  background-color: var(--bg-tertiary);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .order-id {
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .order-date {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
@@ -153,13 +153,13 @@ h2 {
 }
 
 .order-status.completed {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--success-bg);
+  color: var(--success-text);
 }
 
 .order-status.pending {
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: var(--warning-bg);
+  color: var(--warning-text);
 }
 
 .order-items {
@@ -171,7 +171,7 @@ h2 {
   align-items: center;
   gap: 1rem;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .order-item:last-child {
@@ -187,31 +187,31 @@ h2 {
 
 .item-name {
   flex: 1;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .item-price {
   font-weight: 500;
-  color: #2ecc71;
+  color: var(--primary-color);
 }
 
 .order-footer {
   padding: 1rem;
-  background-color: #f9f9f9;
+  background-color: var(--bg-tertiary);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
 }
 
 .order-total {
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .repeat-btn {
   padding: 0.5rem 1rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -219,6 +219,6 @@ h2 {
 }
 
 .repeat-btn:hover {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
 }
 </style>

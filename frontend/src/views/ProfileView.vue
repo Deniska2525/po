@@ -136,14 +136,14 @@ onMounted(() => {
 <style scoped>
 .profile-page {
   min-height: 100vh;
-  background-color: #f9f9f9;
+  background-color: var(--bg-tertiary);
   padding: 2rem;
 }
 
 .profile-container {
   max-width: 600px;
   margin: 0 auto;
-  background-color: white;
+  background-color: var(--bg-card);
   padding: 3rem;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -152,7 +152,7 @@ onMounted(() => {
 .profile-container h2 {
   text-align: center;
   margin-bottom: 2rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .form-group {
@@ -162,7 +162,7 @@ onMounted(() => {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #666;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -170,7 +170,7 @@ onMounted(() => {
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s;
@@ -184,11 +184,11 @@ onMounted(() => {
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
 }
 
 .disabled-input {
-  background-color: #f5f5f5;
+  background-color: var(--bg-tertiary);
   cursor: not-allowed;
 }
 
@@ -210,26 +210,26 @@ onMounted(() => {
 }
 
 .button-group button[type="submit"] {
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
 }
 
 .button-group button[type="submit"]:hover:not(:disabled) {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
 }
 
 .cancel-btn {
-  background-color: #e0e0e0;
-  color: #666;
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
 }
 
 .cancel-btn:hover {
-  background-color: #d0d0d0;
+  background-color: var(--border-color);
 }
 
 .error-message {
-  background-color: #fee;
-  color: #e74c3c;
+  background-color: var(--danger-bg);
+  color: var(--danger-text);
   padding: 0.75rem;
   border-radius: 4px;
   margin-bottom: 1rem;
@@ -237,8 +237,8 @@ onMounted(() => {
 }
 
 .success-message {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--success-bg);
+  color: var(--success-text);
   padding: 0.75rem;
   border-radius: 4px;
   margin-bottom: 1rem;

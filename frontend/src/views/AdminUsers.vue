@@ -302,7 +302,7 @@ onMounted(() => {
 }
 
 .page-header h2 {
-  color: #1a2634;
+  color: var(--text-primary);
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -322,7 +322,7 @@ onMounted(() => {
 .search-box input {
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 2.5rem;
-  border: 1px solid #e0e7ed;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 0.95rem;
   transition: all 0.2s;
@@ -330,7 +330,7 @@ onMounted(() => {
 
 .search-box input:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
 }
 
@@ -339,14 +339,14 @@ onMounted(() => {
   left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .filter-select {
   padding: 0.75rem 2rem 0.75rem 1rem;
-  border: 1px solid #e0e7ed;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: white;
+  background: var(--bg-card);
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -357,13 +357,13 @@ onMounted(() => {
 
 .filter-select:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
 }
 
 .loading-state {
   text-align: center;
   padding: 3rem;
-  background: white;
+  background: var(--bg-card);
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
@@ -372,8 +372,8 @@ onMounted(() => {
   width: 40px;
   height: 40px;
   margin: 0 auto 1rem;
-  border: 3px solid #f1f5f9;
-  border-top-color: #2ecc71;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -383,11 +383,11 @@ onMounted(() => {
 }
 
 .users-table-container {
-  background: white;
+  background: var(--bg-card);
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   overflow: hidden;
-  border: 1px solid #eaeef2;
+  border: 1px solid var(--border-color);
 }
 
 .users-table {
@@ -396,23 +396,23 @@ onMounted(() => {
 }
 
 .users-table th {
-  background: #f8fafc;
+  background: var(--bg-tertiary);
   padding: 1rem;
   text-align: left;
   font-weight: 600;
-  color: #4a5568;
+  color: var(--text-secondary);
   font-size: 0.9rem;
-  border-bottom: 2px solid #eaeef2;
+  border-bottom: 2px solid var(--border-color);
 }
 
 .users-table td {
   padding: 1rem;
-  border-bottom: 1px solid #eaeef2;
-  color: #1a2634;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
 
 .users-table tr:hover {
-  background: #f8fafc;
+  background: var(--bg-tertiary);
 }
 
 .user-cell {
@@ -424,7 +424,7 @@ onMounted(() => {
 .user-avatar {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  background: var(--hero-gradient);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -441,12 +441,12 @@ onMounted(() => {
 
 .user-username {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: var(--text-muted);
 }
 
 .role-select {
   padding: 0.4rem 1.5rem 0.4rem 0.75rem;
-  border: 1px solid #e0e7ed;
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   font-size: 0.85rem;
   cursor: pointer;
@@ -457,11 +457,11 @@ onMounted(() => {
   background-size: 1rem;
 }
 
-.role-select.role-user { background-color: #f1f5f9; color: #4a5568; }
-.role-select.role-developer { background-color: #e8f5e9; color: #2ecc71; }
-.role-select.role-manager { background-color: #fff3e0; color: #f39c12; }
-.role-select.role-admin { background-color: #e3f2fd; color: #2196f3; }
-.role-select.role-superuser { background-color: #f3e5f5; color: #9c27b0; }
+.role-select.role-user { background-color: var(--bg-tertiary); color: var(--text-secondary); }
+.role-select.role-developer { background-color: var(--success-bg); color: var(--success-text); }
+.role-select.role-manager { background-color: var(--warning-bg); color: var(--warning-text); }
+.role-select.role-admin { background-color: var(--info-bg); color: var(--info-text); }
+.role-select.role-superuser { background-color: var(--purple-bg); color: var(--purple-text); }
 
 .status-badge {
   display: inline-block;
@@ -472,13 +472,13 @@ onMounted(() => {
 }
 
 .status-badge.active {
-  background: #e8f5e9;
-  color: #2ecc71;
+  background: var(--success-bg);
+  color: var(--primary-color);
 }
 
 .status-badge.inactive {
-  background: #fee;
-  color: #e74c3c;
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
 
 .actions {
@@ -501,13 +501,13 @@ onMounted(() => {
 }
 
 .action-btn.edit:hover {
-  background: #e8f5e9;
-  color: #2ecc71;
+  background: var(--success-bg);
+  color: var(--primary-color);
 }
 
 .action-btn.delete:hover:not(:disabled) {
-  background: #fee;
-  color: #e74c3c;
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
 
 .action-btn.delete:disabled {
@@ -521,22 +521,22 @@ onMounted(() => {
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  border-top: 1px solid #eaeef2;
+  border-top: 1px solid var(--border-color);
 }
 
 .pagination button {
   padding: 0.5rem 1rem;
-  border: 1px solid #e0e7ed;
-  background: white;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .pagination button:hover:not(:disabled) {
-  background: #2ecc71;
+  background: var(--primary-color);
   color: white;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
 }
 
 .pagination button:disabled {
@@ -551,7 +551,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: var(--modal-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -560,7 +560,7 @@ onMounted(() => {
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-card);
   padding: 2rem;
   border-radius: 16px;
   width: 90%;
@@ -572,7 +572,7 @@ onMounted(() => {
 
 .modal-content h3 {
   margin-bottom: 1.5rem;
-  color: #1a2634;
+  color: var(--text-primary);
   font-size: 1.3rem;
 }
 
@@ -581,7 +581,7 @@ onMounted(() => {
 }
 
 .modal-content .warning {
-  color: #e74c3c;
+  color: var(--danger-text);
   font-size: 0.9rem;
   margin: 1rem 0;
 }
@@ -593,7 +593,7 @@ onMounted(() => {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #4a5568;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -602,7 +602,7 @@ onMounted(() => {
 .form-group select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #e0e7ed;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.2s;
@@ -611,7 +611,7 @@ onMounted(() => {
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
 }
 
@@ -636,16 +636,16 @@ onMounted(() => {
 }
 
 .save-btn {
-  background: #2ecc71;
+  background: var(--primary-color);
   color: white;
 }
 
 .save-btn:hover {
-  background: #27ae60;
+  background: var(--primary-hover);
 }
 
 .delete-btn {
-  background: #e74c3c;
+  background: var(--danger-text);
   color: white;
 }
 
@@ -654,11 +654,11 @@ onMounted(() => {
 }
 
 .cancel-btn {
-  background: #f1f5f9;
-  color: #4a5568;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
 }
 
 .cancel-btn:hover {
-  background: #e2e8f0;
+  background: var(--border-color);
 }
 </style>

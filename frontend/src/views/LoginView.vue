@@ -85,7 +85,7 @@ const handleLogin = async () => {
 <style scoped>
 .login-page {
   min-height: 100vh;
-  background-color: #f9f9f9;
+  background-color: var(--bg-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,7 +93,7 @@ const handleLogin = async () => {
 }
 
 .login-container {
-  background-color: white;
+  background-color: var(--bg-card);
   padding: 3rem;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -104,7 +104,7 @@ const handleLogin = async () => {
 .login-container h2 {
   text-align: center;
   margin-bottom: 2rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .form-group {
@@ -114,14 +114,14 @@ const handleLogin = async () => {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #666;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .form-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s;
@@ -129,13 +129,13 @@ const handleLogin = async () => {
 
 .form-group input:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
 }
 
 button {
   width: 100%;
   padding: 1rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -146,17 +146,17 @@ button {
 }
 
 button:hover:not(:disabled) {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
 }
 
 button:disabled {
-  background-color: #ccc;
+  background-color: var(--border-color);
   cursor: not-allowed;
 }
 
 .error-message {
-  background-color: #fee;
-  color: #e74c3c;
+  background-color: var(--danger-bg);
+  color: var(--danger-text);
   padding: 0.75rem;
   border-radius: 4px;
   margin-bottom: 1rem;
@@ -166,11 +166,11 @@ button:disabled {
 .register-link {
   text-align: center;
   margin-top: 1.5rem;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .register-link a {
-  color: #2ecc71;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 500;
 }
@@ -182,8 +182,8 @@ button:disabled {
 .demo-accounts {
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #eee;
-  color: #999;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 

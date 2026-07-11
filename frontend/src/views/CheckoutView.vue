@@ -256,14 +256,14 @@ const confirmOrder = async () => {
 
 h1 {
   margin-bottom: 2rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .auth-warning,
 .empty-cart {
   text-align: center;
   padding: 4rem;
-  background: white;
+  background: var(--bg-card);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -272,7 +272,7 @@ h1 {
   display: inline-block;
   margin-top: 1rem;
   padding: 0.75rem 1.5rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   text-decoration: none;
   border-radius: 4px;
@@ -280,7 +280,7 @@ h1 {
 }
 
 .btn:hover {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
 }
 
 .checkout-content {
@@ -290,7 +290,7 @@ h1 {
 }
 
 .checkout-form {
-  background: white;
+  background: var(--bg-card);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -298,7 +298,7 @@ h1 {
 
 .checkout-form h2 {
   margin: 1.5rem 0 1rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .checkout-form h2:first-child {
@@ -312,14 +312,14 @@ h1 {
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #666;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
 .form-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 1rem;
   transition: border-color 0.3s;
@@ -327,7 +327,7 @@ h1 {
 
 .form-group input:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
 }
 
 .payment-methods {
@@ -342,14 +342,14 @@ h1 {
   align-items: center;
   gap: 0.75rem;
   padding: 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .payment-method:hover {
-  background-color: #f9f9f9;
+  background-color: var(--bg-tertiary);
 }
 
 .payment-method input[type="radio"] {
@@ -368,7 +368,7 @@ h1 {
 .card-details {
   margin-top: 1rem;
   padding: 1rem;
-  background-color: #f9f9f9;
+  background-color: var(--bg-tertiary);
   border-radius: 4px;
 }
 
@@ -380,13 +380,13 @@ h1 {
 
 .payment-info {
   padding: 1rem;
-  background-color: #e8f5e9;
+  background-color: var(--success-bg);
   border-radius: 4px;
-  color: #2ecc71;
+  color: var(--success-text);
 }
 
 .order-summary {
-  background: white;
+  background: var(--bg-card);
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -395,19 +395,19 @@ h1 {
 
 .order-summary h2 {
   margin-bottom: 1rem;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .order-items {
   margin-bottom: 1rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .order-item {
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 0;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .item-name {
@@ -416,22 +416,22 @@ h1 {
 
 .item-price {
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 0;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .summary-row.total {
-  border-top: 2px solid #eee;
+  border-top: 2px solid var(--border-color);
   margin-top: 0.5rem;
   padding-top: 1rem;
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
   font-size: 1.2rem;
 }
 
@@ -439,7 +439,7 @@ h1 {
   width: 100%;
   padding: 1rem;
   margin-top: 1rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -450,19 +450,19 @@ h1 {
 }
 
 .confirm-btn:hover:not(:disabled) {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
 }
 
 .confirm-btn:disabled {
-  background-color: #ccc;
+  background-color: var(--border-color);
   cursor: not-allowed;
 }
 
 .error {
   margin-top: 1rem;
   padding: 0.75rem;
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: var(--danger-bg);
+  color: var(--danger-text);
   border-radius: 4px;
   text-align: center;
 }
@@ -470,8 +470,8 @@ h1 {
 .success {
   margin-top: 1rem;
   padding: 0.75rem;
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--success-bg);
+  color: var(--success-text);
   border-radius: 4px;
   text-align: center;
 }

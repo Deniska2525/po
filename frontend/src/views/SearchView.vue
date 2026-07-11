@@ -185,11 +185,11 @@ watch(viewMode, (newMode) => {
 <style scoped>
 .search-page {
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: var(--bg-tertiary);
 }
 
 .search-header {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  background: var(--hero-gradient);
   color: white;
   padding: 3rem 2rem;
   text-align: center;
@@ -225,8 +225,8 @@ watch(viewMode, (newMode) => {
 
 .search-bar button {
   padding: 1rem 2.5rem;
-  background-color: white;
-  color: #2ecc71;
+  background-color: var(--bg-card);
+  color: var(--primary-color);
   border: none;
   border-radius: 50px;
   font-size: 1rem;
@@ -251,17 +251,17 @@ watch(viewMode, (newMode) => {
 }
 
 .filters {
-  background-color: white;
+  background-color: var(--bg-card);
   padding: 1.5rem;
   border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-sm);
   height: fit-content;
-  border: 1px solid #eaeef2;
+  border: 1px solid var(--border-color);
 }
 
 .filters h3 {
   margin-bottom: 1.5rem;
-  color: #1a2634;
+  color: var(--text-primary);
   font-size: 1.2rem;
   font-weight: 600;
 }
@@ -273,7 +273,7 @@ watch(viewMode, (newMode) => {
 .filter-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #4a5568;
+  color: var(--text-secondary);
   font-weight: 500;
   font-size: 0.95rem;
 }
@@ -282,7 +282,7 @@ watch(viewMode, (newMode) => {
 .filter-group input {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #e0e7ed;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 0.95rem;
   transition: border-color 0.2s;
@@ -291,7 +291,7 @@ watch(viewMode, (newMode) => {
 .filter-group select:focus,
 .filter-group input:focus {
   outline: none;
-  border-color: #2ecc71;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
 }
 
@@ -308,7 +308,7 @@ watch(viewMode, (newMode) => {
 .apply-filters {
   width: 100%;
   padding: 0.75rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 8px;
@@ -319,15 +319,15 @@ watch(viewMode, (newMode) => {
 }
 
 .apply-filters:hover {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
 }
 
 .reset-filters {
   width: 100%;
   padding: 0.75rem;
-  background-color: #f1f5f9;
-  color: #4a5568;
-  border: 1px solid #e0e7ed;
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
@@ -335,8 +335,8 @@ watch(viewMode, (newMode) => {
 }
 
 .reset-filters:hover {
-  background-color: #e2e8f0;
-  border-color: #cbd5e0;
+  background-color: var(--border-color);
+  border-color: var(--border-hover);
 }
 
 .results-header {
@@ -344,20 +344,20 @@ watch(viewMode, (newMode) => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
-  background: white;
+  background: var(--bg-card);
   padding: 1rem 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  border: 1px solid #eaeef2;
+  border: 1px solid var(--border-color);
 }
 
 .results-info {
-  color: #4a5568;
+  color: var(--text-secondary);
   font-size: 1rem;
 }
 
 .results-info strong {
-  color: #2ecc71;
+  color: var(--primary-color);
   font-size: 1.2rem;
   margin-left: 0.25rem;
 }
@@ -384,18 +384,18 @@ watch(viewMode, (newMode) => {
 .loading {
   text-align: center;
   padding: 4rem;
-  background: white;
+  background: var(--bg-card);
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  border: 1px solid #eaeef2;
+  border: 1px solid var(--border-color);
 }
 
 .spinner {
   width: 40px;
   height: 40px;
   margin: 0 auto 1rem;
-  border: 3px solid #f1f5f9;
-  border-top-color: #2ecc71;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -407,21 +407,21 @@ watch(viewMode, (newMode) => {
 .no-results {
   text-align: center;
   padding: 4rem;
-  background: white;
+  background: var(--bg-card);
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  border: 1px solid #eaeef2;
+  border: 1px solid var(--border-color);
 }
 
 .no-results p {
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
 }
 
 .clear-filters {
   padding: 0.75rem 1.5rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 8px;
@@ -430,7 +430,7 @@ watch(viewMode, (newMode) => {
 }
 
 .clear-filters:hover {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
 }
 
 /* Адаптивность */
@@ -451,22 +451,4 @@ watch(viewMode, (newMode) => {
   }
 }
 
-[data-theme="dark"] .search-content,
-[data-theme="dark"] .search-page,
-[data-theme="dark"] .filters {
-  background-color: var(--bg-secondary);
-}
-
-[data-theme="dark"] .results-header,
-[data-theme="dark"] .filters {
-  color: #fff;
-}
-
-[data-theme="dark"] .filters h3 {
-  color: #4a5568;
-}
-
-[data-theme="dark"] .results-header {
-  background-color: #1e293b;
-}
 </style>

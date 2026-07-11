@@ -18,14 +18,17 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
         if db_user:
             raise HTTPException(status_code=400, detail="Username or email already registered")
         
-        # Создание нового пользователя
+        # Создание нового пользователя.
+        # role жёстко фиксируем как "user" — клиент не может задать себе роль
+        # при регистрации (иначе можно было бы зарегистрироваться сразу админом).
+        # Повысить роль может только администратор через /admin/users/{id}/role.
         hashed_password = auth.get_password_hash(user.password)
         db_user = models.User(
             username=user.username,
             email=user.email,
             hashed_password=hashed_password,
             full_name=user.full_name,
-            role=user.role
+            role="user"
         )
         db.add(db_user)
         db.commit()

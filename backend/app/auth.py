@@ -1,3 +1,5 @@
+import os
+import secrets
 from datetime import datetime, timedelta
 from typing import Optional
 from jose import JWTError, jwt
@@ -9,7 +11,17 @@ from . import models, schemas
 from .database import get_db
 
 # Конфигурация JWT
-SECRET_KEY = "your-secret-key-change-in-production"  # В продакшене меняй!
+# SECRET_KEY обязательно берём из окружения. В проде переменная ДОЛЖНА быть задана,
+# иначе токены можно подделать, зная секрет из публичного репозитория.
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    if os.getenv("ENV", "development") == "production":
+        raise RuntimeError("SECRET_KEY не задана в production-окружении!")
+    # Только для локальной разработки — каждый рестарт будет новый ключ
+    # (все выданные ранее токены станут невалидны, это нормально для дев-режима)
+    SECRET_KEY = secrets.token_hex(32)
+    print("⚠️  SECRET_KEY не задана, используется временный ключ для разработки")
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

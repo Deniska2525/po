@@ -98,7 +98,7 @@ const logout = () => {
 }
 
 .admin-link {
-  color: #f39c12;
+  color: var(--warning-text);
 }
 
 .admin-link:hover {

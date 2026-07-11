@@ -101,13 +101,13 @@ const checkout = () => {
 
 h1 {
   margin-bottom: 2rem;
-  color: #1a2634;
+  color: var(--text-primary);
 }
 
 .empty-cart {
   text-align: center;
   padding: 4rem;
-  background: white;
+  background: var(--bg-card);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
@@ -116,7 +116,7 @@ h1 {
   display: inline-block;
   margin-top: 1rem;
   padding: 0.75rem 1.5rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   text-decoration: none;
   border-radius: 8px;
@@ -130,7 +130,7 @@ h1 {
 }
 
 .cart-items {
-  background: white;
+  background: var(--bg-card);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   overflow: hidden;
@@ -140,7 +140,7 @@ h1 {
   display: flex;
   align-items: center;
   padding: 1.25rem;
-  border-bottom: 1px solid #eaeef2;
+  border-bottom: 1px solid var(--border-color);
   gap: 1.5rem;
 }
 
@@ -151,13 +151,13 @@ h1 {
 .item-icon {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  background: linear-gradient(135deg, var(--success-bg), var(--primary-light));
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  color: #2ecc71;
+  color: var(--primary-color);
 }
 
 .item-info {
@@ -166,12 +166,12 @@ h1 {
 
 .item-info h3 {
   margin-bottom: 0.25rem;
-  color: #1a2634;
+  color: var(--text-primary);
   font-size: 1.1rem;
 }
 
 .item-price {
-  color: #2ecc71;
+  color: var(--primary-color);
   font-weight: 600;
   font-size: 1rem;
 }
@@ -185,19 +185,19 @@ h1 {
 .qty-btn {
   width: 32px;
   height: 32px;
-  border: 1px solid #e0e7ed;
-  background: white;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
   border-radius: 6px;
   cursor: pointer;
   font-size: 1.2rem;
-  color: #4a5568;
+  color: var(--text-secondary);
   transition: all 0.2s;
 }
 
 .qty-btn:hover {
-  background: #f8fafc;
-  border-color: #2ecc71;
-  color: #2ecc71;
+  background: var(--bg-tertiary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .qty-value {
@@ -208,7 +208,7 @@ h1 {
 
 .item-total {
   font-weight: 700;
-  color: #1a2634;
+  color: var(--text-primary);
   min-width: 120px;
   text-align: right;
   font-size: 1.1rem;
@@ -219,17 +219,17 @@ h1 {
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  color: #94a3b8;
+  color: var(--text-muted);
   padding: 0.5rem;
   transition: color 0.2s;
 }
 
 .remove-btn:hover {
-  color: #e74c3c;
+  color: var(--danger-text);
 }
 
 .cart-summary {
-  background: white;
+  background: var(--bg-card);
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -238,15 +238,15 @@ h1 {
 
 .cart-summary h3 {
   margin-bottom: 1.5rem;
-  color: #1a2634;
+  color: var(--text-primary);
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  color: #4a5568;
-  border-bottom: 1px solid #eaeef2;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .summary-row.total {
@@ -254,7 +254,7 @@ h1 {
   margin-top: 0.5rem;
   padding-top: 1rem;
   font-weight: 700;
-  color: #1a2634;
+  color: var(--text-primary);
   font-size: 1.2rem;
 }
 
@@ -262,7 +262,7 @@ h1 {
   width: 100%;
   padding: 1rem;
   margin-top: 1.5rem;
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 8px;
@@ -273,23 +273,23 @@ h1 {
 }
 
 .checkout-btn:hover:not(:disabled) {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
 }
 
 .checkout-btn:disabled {
-  background-color: #cbd5e0;
+  background-color: var(--border-color);
   cursor: not-allowed;
 }
 
 .login-prompt {
   text-align: center;
   margin-top: 1rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
 .login-prompt a {
-  color: #2ecc71;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 500;
 }

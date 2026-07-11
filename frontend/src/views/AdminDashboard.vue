@@ -54,21 +54,21 @@ onMounted(() => {
   align-items: center;
   margin: auto;
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: var(--bg-tertiary);
 }
 
 .admin-header {
-  background: white;
+  background: var(--bg-card);
   padding: 1.5rem 2rem;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  border-bottom: 1px solid #eaeef2;
+  border-bottom: 1px solid var(--border-color);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
 .admin-header h1 {
-  color: #1a2634;
+  color: var(--text-primary);
   margin-bottom: 1rem;
   font-size: 1.8rem;
   font-weight: 600;
@@ -86,19 +86,19 @@ onMounted(() => {
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   text-decoration: none;
-  color: #4a5568;
+  color: var(--text-secondary);
   border-radius: 10px;
   transition: all 0.2s;
   font-weight: 500;
 }
 
 .nav-link:hover {
-  background-color: #f1f5f9;
-  color: #2ecc71;
+  background-color: var(--hover-bg);
+  color: var(--primary-color);
 }
 
 .nav-link.active {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  background: var(--hero-gradient);
   color: white;
   box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
 }

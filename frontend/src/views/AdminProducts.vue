@@ -347,7 +347,7 @@ onMounted(() => {
 
 .add-btn {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  background: var(--hero-gradient);
   color: white;
   border: none;
   border-radius: 8px;
@@ -451,7 +451,7 @@ onMounted(() => {
 
 .product-price {
   font-weight: 700;
-  color: #2ecc71;
+  color: var(--primary-color);
   font-size: 1rem;
   white-space: nowrap;
 }
@@ -482,7 +482,7 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #e74c3c;
+  background-color: var(--danger-text);
   transition: 0.3s;
   border-radius: 22px;
 }
@@ -494,13 +494,13 @@ onMounted(() => {
   width: 18px;
   left: 2px;
   bottom: 2px;
-  background-color: white;
+  background-color: var(--bg-card);
   transition: 0.3s;
   border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: #2ecc71;
+  background-color: var(--primary-color);
 }
 
 input:checked + .slider:before {
@@ -513,11 +513,11 @@ input:checked + .slider:before {
 }
 
 .status-text.active {
-  color: #2ecc71;
+  color: var(--primary-color);
 }
 
 .status-text.inactive {
-  color: #e74c3c;
+  color: var(--danger-text);
 }
 
 .actions {
@@ -552,7 +552,7 @@ input:checked + .slider:before {
 }
 
 .delete-btn:hover {
-  background: #fdd;
+  background: var(--danger-bg);
   transform: scale(1.05);
 }
 
@@ -568,7 +568,7 @@ input:checked + .slider:before {
   height: 40px;
   margin: 0 auto 1rem;
   border: 3px solid var(--border-color);
-  border-top-color: #2ecc71;
+  border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -634,12 +634,12 @@ input:checked + .slider:before {
 }
 
 .save-btn {
-  background: #2ecc71;
+  background: var(--primary-color);
   color: white;
 }
 
 .save-btn:hover:not(:disabled) {
-  background: #27ae60;
+  background: var(--primary-hover);
 }
 
 .save-btn:disabled {

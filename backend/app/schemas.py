@@ -20,11 +20,13 @@ class UserBase(BaseModel):
     username: str
     email: EmailStr
     full_name: Optional[str] = None
-    role: str = "developer"
     bio: Optional[str] = None
     avatar_url: Optional[str] = None
 
 class UserCreate(UserBase):
+    # ВАЖНО: здесь намеренно нет поля role.
+    # Роль всегда выставляется сервером (см. routers/users.py -> register)
+    # и меняется только через админский эндпоинт PUT /admin/users/{id}/role.
     password: str
 
 class UserUpdate(BaseModel):
@@ -35,6 +37,7 @@ class UserUpdate(BaseModel):
 
 class User(UserBase):
     id: int
+    role: str
     is_active: bool
     created_at: datetime
     last_login: Optional[datetime] = None
