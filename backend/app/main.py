@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from .database import engine, Base
+from .schema_sync import sync_schema
 from .routers import users, products, search, admin, orders, downloads
 from . import models
 
@@ -14,6 +15,12 @@ app = FastAPI(title="Marketplace PO API")
 # отдельной командой `python init_db.py` (см. этот файл — он идемпотентен
 # и ничего не делает, если данные уже есть).
 Base.metadata.create_all(bind=engine)
+
+# Дополнительно: безопасно добавляем недостающие КОЛОНКИ в уже существующие
+# таблицы (create_all этого не делает — см. schema_sync.py). Нужно, потому что
+# на бесплатном Render нет Shell, чтобы прогнать ALTER TABLE вручную после
+# каждого изменения models.py.
+sync_schema(engine, Base)
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
