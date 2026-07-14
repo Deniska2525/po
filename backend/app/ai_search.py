@@ -27,9 +27,12 @@
 """
 import os
 import json
-from openai import OpenAI
+import logging
+from openai import OpenAI, APIError
 from sqlalchemy.orm import Session
 from .product_search import filter_products, product_to_dict
+
+logger = logging.getLogger("ai_search")
 
 # --- Настройка провайдера через переменные окружения ---
 # Groq (бесплатно, без карты): AI_BASE_URL=https://api.groq.com/openai/v1
@@ -69,6 +72,9 @@ SYSTEM_PROMPT = """Ты — ассистент маркетплейса прог
 товары через инструмент search_products и вернуть их.
 
 Правила:
+- Ты ОБЯЗАН вызвать search_products минимум один раз, прежде чем дать финальный
+  ответ — даже если запрос кажется расплывчатым. Не отвечай "не найдено" без
+  реального вызова инструмента: возможно, каталог просто нужно поискать шире.
 - Вызывай search_products столько раз, сколько нужно, чтобы подобрать хорошие варианты
   (например, если по узким ключевым словам ничего не нашлось — попробуй шире).
 - Не выдумывай товары и id, которых не было в результатах инструмента.
@@ -76,8 +82,8 @@ SYSTEM_PROMPT = """Ты — ассистент маркетплейса прог
   строго в формате:
   {"message": "короткий дружелюбный комментарий на русском, 1-2 предложения",
    "product_ids": [список id подходящих товаров, максимум 12, по убыванию релевантности]}
-- Если ничего подходящего не нашлось — верни пустой список product_ids и вежливо
-  объясни это в message.
+- Если после реального вызова инструмента ничего подходящего не нашлось — верни
+  пустой список product_ids и вежливо объясни это в message.
 """
 
 
@@ -123,23 +129,38 @@ def ai_search(query: str, db: Session) -> dict:
     ]
 
     for _ in range(MAX_TOOL_ITERATIONS):
-        response = client.chat.completions.create(
-            model=AI_MODEL,
-            messages=messages,
-            tools=[SEARCH_TOOL],
-            tool_choice="auto",
-            max_tokens=1024,
-        )
+        try:
+            response = client.chat.completions.create(
+                model=AI_MODEL,
+                messages=messages,
+                tools=[SEARCH_TOOL],
+                tool_choice="auto",
+                max_tokens=1024,
+            )
+        except APIError as e:
+            # Печатаем в логи Render — там будет видно точную причину (401 —
+            # неверный ключ, 400 — что-то не так с форматом запроса, 429 —
+            # превышен бесплатный лимит и т.д.)
+            logger.error("Ошибка обращения к AI-провайдеру (%s): %s", AI_BASE_URL, e)
+            return {
+                "message": "ИИ-провайдер сейчас недоступен или вернул ошибку. Попробуйте ещё раз чуть позже.",
+                "product_ids": [],
+            }
+
         message = response.choices[0].message
 
         if not message.tool_calls:
             return _parse_final_json(message.content)
 
-        # Модель хочет вызвать инструмент(ы)
+        # Модель хочет вызвать инструмент(ы).
+        # ВАЖНО: content не должен быть None — некоторые OpenAI-совместимые
+        # провайдеры (в т.ч. Groq) отвечают 400 Bad Request на content: null,
+        # хотя формально по спецификации OpenAI это допустимо. Подставляем
+        # пустую строку вместо null для совместимости.
         messages.append(
             {
                 "role": "assistant",
-                "content": message.content,
+                "content": message.content or "",
                 "tool_calls": [
                     {
                         "id": tc.id,
