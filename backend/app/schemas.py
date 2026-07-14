@@ -128,6 +128,14 @@ class Category(CategoryBase):
     class Config:
         from_attributes = True
 
+# ===== AI search schemas =====
+class AISearchRequest(BaseModel):
+    query: str
+
+class AISearchResponse(BaseModel):
+    message: str
+    products: List[Product]
+
 # ===== Statistics schemas =====
 class DashboardStats(BaseModel):
     total_users: int

@@ -7,10 +7,30 @@ export const useProductsStore = defineStore('products', {
     myProducts: [],
     searchResults: [],
     categories: [],
-    loading: false
+    loading: false,
+    aiSearchMessage: '',
+    aiSearchError: ''
   }),
   
   actions: {
+    async aiSearch(query) {
+      this.loading = true
+      this.aiSearchError = ''
+      this.aiSearchMessage = ''
+      try {
+        const { data } = await api.post('/ai-search/', { query })
+        this.searchResults = data.products
+        this.aiSearchMessage = data.message
+        return { success: true }
+      } catch (error) {
+        this.searchResults = []
+        this.aiSearchError = error.response?.data?.detail || 'Не удалось выполнить ИИ-поиск. Попробуйте ещё раз.'
+        return { success: false, message: this.aiSearchError }
+      } finally {
+        this.loading = false
+      }
+    },
+
     async fetchAllProducts() {
       this.loading = true
       try {

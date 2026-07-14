@@ -1,71 +1,76 @@
 <template>
   <div class="home">
-    <section class="hero">
-      <h1>Маркетплейс программного обеспечения</h1>
-      <p>Найдите идеальное ПО для ваших задач</p>
+    <section class="hero" :class="{ 'hero--compact': hasSearched }">
+      <h1>Какое ПО вам нужно?</h1>
+      <p>Опишите своими словами задачу — ИИ подберёт подходящие варианты из каталога</p>
       <div class="hero-search">
-        <input 
-          type="text" 
-          v-model="searchQuery" 
-          placeholder="Поиск программ..."
+        <input
+          type="text"
+          v-model="searchQuery"
+          placeholder="Например: нужна интеграция 1С с телеграмом, желательно недорого"
           @keyup.enter="handleSearch"
+          :disabled="loading"
         >
-        <button @click="handleSearch">Найти</button>
+        <button @click="handleSearch" :disabled="loading || !searchQuery.trim()">
+          {{ loading ? 'Ищу…' : 'Найти' }}
+        </button>
       </div>
     </section>
 
-    <section class="featured">
-      <div class="section-header">
-        <h2>Популярные программы</h2>
-        <ViewToggle v-model="viewMode" />
+    <section v-if="loading" class="ai-status">
+      <div class="spinner"></div>
+      <p>ИИ анализирует каталог и подбирает варианты под ваш запрос…</p>
+    </section>
+
+    <section v-else-if="errorMessage" class="ai-status ai-status--error">
+      <p>{{ errorMessage }}</p>
+    </section>
+
+    <section v-else-if="hasSearched" class="results">
+      <div class="ai-message" v-if="aiMessage">
+        <span class="ai-message-icon">✨</span>
+        <p>{{ aiMessage }}</p>
       </div>
-      
-      <div v-if="productsStore.loading" class="loading">
-        <div class="spinner"></div>
-      </div>
-      
-      <div v-else class="products-grid" :class="viewMode">
-        <ProductCard 
-          v-for="product in productsStore.products" 
-          :key="product.id" 
+
+      <div v-if="productsStore.searchResults.length" class="products-grid grid-3">
+        <ProductCard
+          v-for="product in productsStore.searchResults"
+          :key="product.id"
           :product="product"
-          :view="viewMode"
+          view="grid-3"
         />
+      </div>
+      <div v-else class="empty-results">
+        <p>По вашему запросу ничего не нашлось. Попробуйте переформулировать — например, укажите категорию задачи или уберите лишние детали.</p>
       </div>
     </section>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { useProductsStore } from '../stores/products';
-import { useRouter } from 'vue-router';
 import ProductCard from '../components/ProductCard.vue';
-import ViewToggle from '../components/ViewToggle.vue';
 
 const productsStore = useProductsStore();
-const router = useRouter();
 const searchQuery = ref('');
-const viewMode = ref('grid-3'); // Изменено с grid-4 на grid-3
+const hasSearched = ref(false);
+const errorMessage = ref('');
 
-const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    router.push({ path: '/search', query: { q: searchQuery.value } });
+const loading = computed(() => productsStore.loading);
+const aiMessage = computed(() => productsStore.aiSearchMessage);
+
+const handleSearch = async () => {
+  const query = searchQuery.value.trim();
+  if (!query || loading.value) return;
+
+  errorMessage.value = '';
+  const result = await productsStore.aiSearch(query);
+  hasSearched.value = true;
+  if (!result.success) {
+    errorMessage.value = result.message;
   }
 };
-
-onMounted(() => {
-  productsStore.fetchAllProducts();
-  
-  const savedView = localStorage.getItem('preferred_view');
-  if (savedView && ['grid-3', 'grid-2', 'list'].includes(savedView)) {
-    viewMode.value = savedView;
-  }
-});
-
-watch(viewMode, (newMode) => {
-  localStorage.setItem('preferred_view', newMode);
-});
 </script>
 
 <style scoped>

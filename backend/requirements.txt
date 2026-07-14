@@ -20,3 +20,5 @@ typing-inspection==0.4.2
 typing_extensions==4.15.0
 email-validator==2.1.0
 uvicorn[standard]
+openai==2.45.0
+mcp==1.28.1
