@@ -7,7 +7,7 @@
         <input
           type="text"
           v-model="searchQuery"
-          placeholder="Например: нужна интеграция 1С с телеграмом, желательно недорого"
+          placeholder="Чем вам помочь?"
           @keyup.enter="handleSearch"
           :disabled="loading"
         >
@@ -15,6 +15,9 @@
           {{ loading ? 'Ищу…' : 'Найти' }}
         </button>
       </div>
+      <button v-if="hasSearched && !loading" class="new-search-btn" @click="resetSearch">
+        ✕ Новый поиск
+      </button>
     </section>
 
     <section v-if="loading" class="ai-status">
@@ -70,6 +73,14 @@ const handleSearch = async () => {
   if (!result.success) {
     errorMessage.value = result.message;
   }
+};
+
+const resetSearch = () => {
+  searchQuery.value = '';
+  hasSearched.value = false;
+  errorMessage.value = '';
+  productsStore.searchResults = [];
+  productsStore.aiSearchMessage = '';
 };
 </script>
 

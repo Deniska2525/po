@@ -83,6 +83,23 @@
   padding: 2.5rem 2rem;
 }
 
+.new-search-btn {
+  margin-top: 1rem;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.new-search-btn:hover {
+  background: var(--hover-bg);
+  color: var(--text-primary);
+}
+
 .ai-status {
   max-width: 600px;
   margin: 0 auto;

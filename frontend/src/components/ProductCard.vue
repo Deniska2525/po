@@ -58,7 +58,7 @@ const developerName = computed(() => {
 
 const truncatedDescription = computed(() => {
   const maxLen = props.view === 'list' ? 250 : (props.view === 'grid-2' ? 150 : 120)
-  const desc = props.product.description
+  const desc = props.product.description || ''
   return desc.length > maxLen ? desc.slice(0, maxLen) + '...' : desc
 })
 

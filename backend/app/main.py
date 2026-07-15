@@ -3,8 +3,9 @@ from contextlib import asynccontextmanager, AsyncExitStack
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from .database import engine, Base
+from .database import engine, Base, SessionLocal
 from .schema_sync import sync_schema
+from . import seed_extra
 from .routers import users, products, search, admin, orders, downloads, ai_search
 from . import models
 from .mcp_tools import mcp
@@ -21,6 +22,14 @@ Base.metadata.create_all(bind=engine)
 # на бесплатном Render нет Shell, чтобы прогнать ALTER TABLE вручную после
 # каждого изменения models.py.
 sync_schema(engine, Base)
+
+# Расширяем каталог демо-товарами для разнообразия (см. seed_extra.py).
+# Идемпотентно: проверяет по имени, повторные рестарты ничего не дублируют.
+_seed_db = SessionLocal()
+try:
+    seed_extra.run(_seed_db)
+finally:
+    _seed_db.close()
 
 
 @asynccontextmanager
