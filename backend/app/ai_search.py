@@ -34,11 +34,9 @@ from .product_search import filter_products, product_to_dict
 
 logger = logging.getLogger("ai_search")
 
-# --- Настройка провайдера через переменные окружения ---
-# Groq (бесплатно, без карты): AI_BASE_URL=https://api.groq.com/openai/v1
-# Gemini (бесплатно, без карты): AI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
-AI_BASE_URL = os.getenv("AI_BASE_URL", "https://api.groq.com/openai/v1")
-AI_MODEL = os.getenv("AI_MODEL", "llama-3.3-70b-versatile")
+
+AI_BASE_URL = os.getenv("AI_BASE_URL", "https://openrouter.ai/api/v1")
+AI_MODEL = os.getenv("AI_MODEL", "google/gemma-4-31b-it")
 MAX_TOOL_ITERATIONS = 4  # защита от зацикливания, если модель будет звать инструмент бесконечно
 
 SEARCH_TOOL = {
