@@ -69,7 +69,9 @@
 }
 
 .dropdown-item {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   padding: 0.75rem 1rem;
   text-align: left;
@@ -78,6 +80,20 @@
   cursor: pointer;
   color: var(--text-secondary);
   transition: background 0.2s;
+}
+
+.item-badge {
+  background: var(--primary-color);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 0.4rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dropdown-item:hover {

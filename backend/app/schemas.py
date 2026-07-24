@@ -1,5 +1,5 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional, List
+from pydantic import BaseModel, EmailStr, Field, field_validator
+from typing import Optional, List, Literal
 from datetime import datetime
 
 # ===== Auth schemas =====
@@ -27,7 +27,16 @@ class UserCreate(UserBase):
     # ВАЖНО: здесь намеренно нет поля role.
     # Роль всегда выставляется сервером (см. routers/users.py -> register)
     # и меняется только через админский эндпоинт PUT /admin/users/{id}/role.
-    password: str
+    # Максимум 72 символа — ограничение bcrypt.
+    username: str = Field(min_length=3, max_length=50)
+    password: str = Field(min_length=8, max_length=72)
+
+    @field_validator("password")
+    @classmethod
+    def password_strength(cls, v: str) -> str:
+        if not any(c.isalpha() for c in v) or not any(c.isdigit() for c in v):
+            raise ValueError("Пароль должен содержать и буквы, и цифры")
+        return v
 
 class UserUpdate(BaseModel):
     full_name: Optional[str] = None
@@ -44,6 +53,33 @@ class User(UserBase):
     
     class Config:
         from_attributes = True
+
+class UserPublic(BaseModel):
+    """Публичный профиль — без email и других приватных полей."""
+    id: int
+    username: str
+    full_name: Optional[str] = None
+    bio: Optional[str] = None
+    avatar_url: Optional[str] = None
+    role: str
+
+    class Config:
+        from_attributes = True
+
+# ===== Admin schemas =====
+RoleName = Literal["user", "developer", "manager", "admin", "superuser"]
+
+class RoleUpdate(BaseModel):
+    new_role: RoleName
+
+class AdminUserUpdate(BaseModel):
+    full_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    role: Optional[RoleName] = None
+    is_active: Optional[bool] = None
+
+class OrderStatusUpdate(BaseModel):
+    status: Literal["pending", "paid", "completed", "cancelled"]
 
 # ===== Product schemas =====
 class ProductBase(BaseModel):
@@ -68,7 +104,8 @@ class Product(ProductBase):
     updated_at: datetime
     downloads_count: int
     is_active: bool
-    developer: Optional[User] = None
+    # Публичная схема: товары видны всем, поэтому email разработчика не отдаём
+    developer: Optional[UserPublic] = None
     
     class Config:
         from_attributes = True
@@ -92,15 +129,16 @@ class Order(BaseModel):
     payment_method: Optional[str]
     transaction_id: Optional[str]
     products: List[Product]
+    user: Optional[User] = None
     
     class Config:
         from_attributes = True
 
 # ===== Download schemas =====
 class DownloadCreate(BaseModel):
+    # ip_address/user_agent намеренно не принимаются от клиента —
+    # сервер берёт их из самого запроса (иначе их можно подделать)
     product_id: int
-    ip_address: Optional[str] = None
-    user_agent: Optional[str] = None
 
 class Download(BaseModel):
     id: int
@@ -125,6 +163,15 @@ class Category(CategoryBase):
     id: int
     product_count: int
     
+    class Config:
+        from_attributes = True
+
+# ===== Favorite schemas =====
+class Favorite(BaseModel):
+    id: int
+    created_at: datetime
+    product: Product
+
     class Config:
         from_attributes = True
 

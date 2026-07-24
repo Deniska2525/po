@@ -75,6 +75,17 @@
         </div>
       </div>
     </div>
+
+    <!-- Подтверждение удаления -->
+    <ConfirmModal
+      v-if="deletingCategory"
+      title="Удалить категорию?"
+      confirm-text="Удалить"
+      @confirm="deleteCategory(deletingCategory.id); deletingCategory = null"
+      @cancel="deletingCategory = null"
+    >
+      Категория <strong>«{{ deletingCategory.name }}»</strong> будет удалена без возможности восстановления.
+    </ConfirmModal>
   </div>
 </template>
 
@@ -156,9 +167,7 @@ const confirmDeleteCategory = (category) => {
     return
   }
   
-  if (confirm(`Удалить категорию "${category.name}"?`)) {
-    deleteCategory(category.id)
-  }
+  deletingCategory.value = category
 }
 
 const deleteCategory = async (categoryId) => {

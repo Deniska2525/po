@@ -110,7 +110,7 @@ def pay_order(
         db.commit()
         
         return {"message": "Payment successful", "order_id": order.id}
-    except Exception as e:
+    except Exception:
         order.status = "failed"
         db.commit()
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=400, detail="Payment failed")

@@ -46,7 +46,7 @@
             <div v-for="order in stats.recent_orders" :key="order.id" class="order-item">
               <span class="order-id">Заказ #{{ order.id }}</span>
               <span class="order-amount">{{ formatPrice(order.total_amount) }}</span>
-              <span class="order-status" :class="order.status">{{ order.status }}</span>
+              <span class="order-status" :class="order.status">{{ statusLabel(order.status) }}</span>
             </div>
           </div>
           <div v-else class="no-data">
@@ -99,6 +99,16 @@ const formatPrice = (price) => {
     currency: 'RUB',
     minimumFractionDigits: 0
   }).format(price / 100);
+};
+
+const statusLabel = (status) => {
+  const labels = {
+    pending: 'Ожидает оплаты',
+    paid: 'Оплачен',
+    completed: 'Выполнен',
+    cancelled: 'Отменён'
+  };
+  return labels[status] || status;
 };
 
 const formatDate = (dateStr) => {
@@ -322,6 +332,11 @@ onMounted(() => {
 .order-status.pending {
   background: var(--warning-bg);
   color: var(--warning-text);
+}
+
+.order-status.paid {
+  background: var(--info-bg);
+  color: var(--info-text);
 }
 
 .order-status.cancelled {

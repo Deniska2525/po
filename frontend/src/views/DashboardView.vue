@@ -30,7 +30,7 @@
           </div>
           <div class="product-actions">
             <button class="edit-btn" @click="editProduct(product)">✏️</button>
-            <button class="delete-btn" @click="deleteProduct(product.id)">🗑️</button>
+            <button class="delete-btn" @click="confirmDeleteProduct(product)">🗑️</button>
           </div>
         </div>
       </div>
@@ -92,6 +92,17 @@
         </form>
       </div>
     </div>
+
+    <!-- Подтверждение удаления продукта -->
+    <ConfirmModal
+      v-if="deletingProduct"
+      title="Удалить продукт?"
+      confirm-text="Удалить"
+      @confirm="deleteProduct"
+      @cancel="deletingProduct = null"
+    >
+      Вы уверены, что хотите удалить <strong>«{{ deletingProduct.name }}»</strong>?
+    </ConfirmModal>
   </div>
 </template>
 
@@ -100,6 +111,7 @@ import { ref, onMounted } from 'vue';
 import { useAuthStore } from '../stores/auth';
 import { useProductsStore } from '../stores/products';
 import { useRouter } from 'vue-router';
+import ConfirmModal from '../components/ConfirmModal.vue';
 
 const authStore = useAuthStore();
 const productsStore = useProductsStore();
@@ -187,14 +199,22 @@ const saveProduct = async () => {
   formLoading.value = false;
 };
 
-const deleteProduct = async (productId) => {
-  if (confirm('Вы уверены, что хотите удалить этот продукт?')) {
-    const result = await productsStore.deleteProduct(productId);
-    if (result.success) {
-      await productsStore.fetchMyProducts();
-    } else {
-      alert(result.message);
-    }
+const deletingProduct = ref(null);
+
+const confirmDeleteProduct = (product) => {
+  deletingProduct.value = product;
+};
+
+const deleteProduct = async () => {
+  const productId = deletingProduct.value?.id;
+  deletingProduct.value = null;
+  if (!productId) return;
+
+  const result = await productsStore.deleteProduct(productId);
+  if (result.success) {
+    await productsStore.fetchMyProducts();
+  } else {
+    alert(result.message);
   }
 };
 

@@ -5,6 +5,8 @@ const HomeView = () => import('../views/HomeView.vue')
 const LoginView = () => import('../views/LoginView.vue')
 const RegisterView = () => import('../views/RegisterView.vue')
 const ProfileView = () => import('../views/ProfileView.vue')
+const ProfileOrders = () => import('../views/ProfileOrders.vue')
+const FavoritesView = () => import('../views/FavoritesView.vue')
 const DashboardView = () => import('../views/DashboardView.vue')
 const SearchView = () => import('../views/SearchView.vue')
 const CartView = () => import('../views/CartView.vue')
@@ -14,6 +16,7 @@ const AdminStats = () => import('../views/AdminStats.vue')
 const AdminUsers = () => import('../views/AdminUsers.vue')
 const AdminProducts = () => import('../views/AdminProducts.vue')
 const AdminCategories = () => import('../views/AdminCategories.vue')
+const AdminOrders = () => import('../views/AdminOrders.vue')
 
 const router = createRouter({
   history: createWebHistory(),
@@ -22,6 +25,8 @@ const router = createRouter({
     { path: '/login', name: 'login', component: LoginView, meta: { guest: true } },
     { path: '/register', name: 'register', component: RegisterView, meta: { guest: true } },
     { path: '/profile', name: 'profile', component: ProfileView, meta: { auth: true } },
+    { path: '/orders', name: 'my-orders', component: ProfileOrders, meta: { auth: true } },
+    { path: '/favorites', name: 'favorites', component: FavoritesView, meta: { auth: true } },
     { path: '/dashboard', name: 'dashboard', component: DashboardView, meta: { auth: true, developer: true } },
     { path: '/search', name: 'search', component: SearchView },
     { path: '/cart', name: 'cart', component: CartView },
@@ -34,7 +39,9 @@ const router = createRouter({
         { path: '', name: 'admin', component: AdminStats },
         { path: 'users', name: 'admin-users', component: AdminUsers },
         { path: 'products', name: 'admin-products', component: AdminProducts },
-        { path: 'categories', name: 'admin-categories', component: AdminCategories }
+        { path: 'categories', name: 'admin-categories', component: AdminCategories },
+        { path: 'orders', name: 'admin-orders', component: AdminOrders },
+        { path: 'stats', name: 'admin-stats', component: AdminStats }
       ]
     }
   ]

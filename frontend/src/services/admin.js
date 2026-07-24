@@ -75,6 +75,33 @@ class AdminService {
     const { data } = await api.get('/admin/dashboard')
     return data
   }
+
+  async getRevenueStats(period = 'month') {
+    const { data } = await api.get(`/admin/revenue?period=${period}`)
+    // Бэкенд отдаёт заполненным только один из трёх массивов (в зависимости от period),
+    // остальные — пустые. Приводим к единому плоскому списку для графика.
+    return data.daily.length ? data.daily : (data.monthly.length ? data.monthly : data.yearly)
+  }
+
+  async updateUser(userId, userData) {
+    const { data } = await api.put(`/admin/users/${userId}`, userData)
+    return data
+  }
+
+  async getOrders(params = {}) {
+    const queryParams = new URLSearchParams()
+    if (params.status) queryParams.append('status', params.status)
+    if (params.limit) queryParams.append('limit', params.limit)
+    if (params.skip) queryParams.append('skip', params.skip)
+
+    const { data } = await api.get(`/admin/orders?${queryParams.toString()}`)
+    return data
+  }
+
+  async updateOrderStatus(orderId, status) {
+    const { data } = await api.put(`/admin/orders/${orderId}/status`, { status })
+    return data
+  }
 }
 
 export default new AdminService()

@@ -150,18 +150,15 @@
     </div>
 
     <!-- Модальное окно подтверждения удаления -->
-    <div v-if="deletingUser" class="modal">
-      <div class="modal-content confirm-delete">
-        <h3>Подтверждение удаления</h3>
-        <p>Вы уверены, что хотите удалить пользователя <strong>{{ deletingUser.username }}</strong>?</p>
-        <p class="warning">Это действие нельзя отменить!</p>
-        
-        <div class="modal-actions">
-          <button class="delete-btn" @click="deleteUser">Удалить</button>
-          <button class="cancel-btn" @click="deletingUser = null">Отмена</button>
-        </div>
-      </div>
-    </div>
+    <ConfirmModal
+      v-if="deletingUser"
+      title="Подтверждение удаления"
+      confirm-text="Удалить"
+      @confirm="deleteUser"
+      @cancel="deletingUser = null"
+    >
+      Вы уверены, что хотите удалить пользователя <strong>{{ deletingUser.username }}</strong>?
+    </ConfirmModal>
   </div>
 </template>
 
@@ -169,6 +166,7 @@
 import { ref, onMounted, watch } from 'vue';
 import adminService from '../services/admin';
 import debounce from 'lodash/debounce';
+import ConfirmModal from '../components/ConfirmModal.vue';
 
 const users = ref([]);
 const loading = ref(true);
@@ -576,16 +574,6 @@ onMounted(() => {
   font-size: 1.3rem;
 }
 
-.modal-content.confirm-delete {
-  text-align: center;
-}
-
-.modal-content .warning {
-  color: var(--danger-text);
-  font-size: 0.9rem;
-  margin: 1rem 0;
-}
-
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -642,15 +630,6 @@ onMounted(() => {
 
 .save-btn:hover {
   background: var(--primary-hover);
-}
-
-.delete-btn {
-  background: var(--danger-text);
-  color: white;
-}
-
-.delete-btn:hover {
-  background: #c0392b;
 }
 
 .cancel-btn {

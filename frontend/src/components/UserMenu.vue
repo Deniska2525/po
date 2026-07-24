@@ -8,6 +8,11 @@
     
     <div v-if="isOpen" class="dropdown">
       <div class="welcome">{{ authStore.welcomeMessage }}</div>
+      <router-link to="/favorites" class="dropdown-item" @click="close">
+        ❤️ Избранное
+        <span v-if="favoritesStore.count" class="item-badge">{{ favoritesStore.count }}</span>
+      </router-link>
+      <router-link to="/orders" class="dropdown-item" @click="close">📦 Мои заказы</router-link>
       <router-link to="/profile" class="dropdown-item" @click="close">📝 Редактировать</router-link>
       <button class="dropdown-item logout" @click="handleLogout">🚪 Выйти</button>
     </div>
@@ -17,8 +22,10 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useAuthStore } from '../stores/auth'
+import { useFavoritesStore } from '../stores/favorites'
 
 const authStore = useAuthStore()
+const favoritesStore = useFavoritesStore()
 const isOpen = ref(false)
 const menuRef = ref(null)
 

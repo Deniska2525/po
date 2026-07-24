@@ -148,6 +148,17 @@
         </form>
       </div>
     </div>
+
+    <!-- Подтверждение удаления продукта -->
+    <ConfirmModal
+      v-if="deletingProduct"
+      title="Удалить продукт?"
+      confirm-text="Удалить"
+      @confirm="deleteProduct(deletingProduct.id); deletingProduct = null"
+      @cancel="deletingProduct = null"
+    >
+      Вы уверены, что хотите удалить продукт <strong>«{{ deletingProduct.name }}»</strong>?
+    </ConfirmModal>
   </div>
 </template>
 
@@ -155,6 +166,7 @@
 import { ref, onMounted } from 'vue'
 import adminService from '../services/admin'
 import debounce from 'lodash/debounce'
+import ConfirmModal from '../components/ConfirmModal.vue'
 
 const products = ref([])
 const categories = ref([])
@@ -291,10 +303,10 @@ const saveProduct = async () => {
   }
 }
 
+const deletingProduct = ref(null)
+
 const confirmDeleteProduct = (product) => {
-  if (confirm(`Вы уверены, что хотите удалить продукт "${product.name}"?`)) {
-    deleteProduct(product.id)
-  }
+  deletingProduct.value = product
 }
 
 const deleteProduct = async (productId) => {

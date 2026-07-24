@@ -21,11 +21,12 @@ def track_download(
     
     product.downloads_count += 1
     
+    # ip/user_agent берём только из самого запроса — клиентские значения подделываются
     download = models.Download(
         user_id=current_user.id,
         product_id=download_data.product_id,
-        ip_address=download_data.ip_address or request.client.host,
-        user_agent=download_data.user_agent or request.headers.get("user-agent")
+        ip_address=request.client.host if request.client else None,
+        user_agent=request.headers.get("user-agent")
     )
     
     db.add(download)

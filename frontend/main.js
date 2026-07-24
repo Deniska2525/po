@@ -17,10 +17,8 @@ app.use(router)
 const themeStore = useThemeStore(pinia)
 themeStore.init()
 
-// Загрузка пользователя
+// Восстановление сессии через refresh-токен в httpOnly cookie.
+// Ждём завершения до монтирования, иначе router guard успеет сработать
+// до восстановления сессии и выкинет залогиненного пользователя на /login.
 const authStore = useAuthStore(pinia)
-if (authStore.token) {
-  authStore.fetchUser().catch(() => authStore.logout())
-}
-
-app.mount('#app')
+authStore.init().finally(() => app.mount('#app'))

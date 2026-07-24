@@ -1,4 +1,22 @@
 services:
+  db:
+    image: postgres:16-alpine
+    container_name: marketplace-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=marketplace
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   backend:
     build: ./backend
     container_name: marketplace-backend
@@ -9,11 +27,18 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - SECRET_KEY=${SECRET_KEY}
-      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost}
       - ENV=${ENV:-development}
+      - SEED_DEMO_USERS=${SEED_DEMO_USERS:-}
+      - SEED_ADMIN_PASSWORD=${SEED_ADMIN_PASSWORD:-}
+      - SEED_DEV_PASSWORD=${SEED_DEV_PASSWORD:-}
+      - SEED_USER_PASSWORD=${SEED_USER_PASSWORD:-}
       - AI_API_KEY=${AI_API_KEY}
       - AI_BASE_URL=${AI_BASE_URL:-https://api.groq.com/openai/v1}
       - AI_MODEL=${AI_MODEL:-llama-3.3-70b-versatile}
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
 
   frontend:
@@ -24,3 +49,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+volumes:
+  pgdata:

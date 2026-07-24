@@ -3,6 +3,14 @@
     <div class="card-header">
       <h3 class="product-title">{{ product.name }}</h3>
       <span class="category-badge">{{ product.category }}</span>
+      <button
+        class="favorite-btn"
+        :class="{ active: isFavorite }"
+        @click="toggleFavorite"
+        :title="isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'"
+      >
+        {{ isFavorite ? '❤️' : '🤍' }}
+      </button>
     </div>
     
     <div class="card-content">
@@ -35,7 +43,10 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useCartStore } from '../stores/cart'
+import { useAuthStore } from '../stores/auth'
+import { useFavoritesStore } from '../stores/favorites'
 
 const props = defineProps({
   product: {
@@ -48,7 +59,20 @@ const props = defineProps({
   }
 })
 
+const router = useRouter()
 const cartStore = useCartStore()
+const authStore = useAuthStore()
+const favoritesStore = useFavoritesStore()
+
+const isFavorite = computed(() => favoritesStore.isFavorite(props.product.id))
+
+const toggleFavorite = async () => {
+  if (!authStore.isAuthenticated) {
+    router.push('/login')
+    return
+  }
+  await favoritesStore.toggleFavorite(props.product)
+}
 
 const developerName = computed(() => {
   return props.product.developer?.full_name || 

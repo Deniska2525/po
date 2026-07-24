@@ -37,15 +37,6 @@
         Нет аккаунта? 
         <router-link to="/register">Зарегистрироваться</router-link>
       </p>
-      
-      <div class="demo-accounts">
-        <p>Тестовые аккаунты:</p>
-        <ul>
-          <li>superuser / admin123</li>
-          <li>dev_ivan / dev123</li>
-          <li>manager_alex / manager123</li>
-        </ul>
-      </div>
     </div>
   </div>
 </template>
@@ -177,18 +168,5 @@ button:disabled {
 
 .register-link a:hover {
   text-decoration: underline;
-}
-
-.demo-accounts {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color);
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-.demo-accounts ul {
-  margin-top: 0.5rem;
-  padding-left: 1.5rem;
 }
 </style>

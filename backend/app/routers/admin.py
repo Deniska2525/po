@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func, desc
@@ -5,6 +6,8 @@ from typing import List, Optional
 from datetime import datetime, timedelta
 from .. import models, schemas, auth
 from ..database import get_db
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -51,9 +54,9 @@ def get_dashboard_stats(
             "recent_orders": recent_orders,
             "popular_products": popular_products
         }
-    except Exception as e:
-        print(f"Error in dashboard stats: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.exception("Error in dashboard stats")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.get("/revenue", response_model=schemas.RevenueStats)
 def get_revenue_stats(
@@ -99,9 +102,9 @@ def get_revenue_stats(
             ).group_by('date').all()
             return {"daily": [], "monthly": [], "yearly": [{"date": r.date, "revenue": r.revenue} for r in results]}
             
-    except Exception as e:
-        print(f"Error in revenue stats: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.exception("Error in revenue stats")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 # ============== УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ ==============
 
@@ -136,38 +139,68 @@ def get_all_users(
         users = query.offset(skip).limit(limit).all()
         
         return users
-    except Exception as e:
-        print(f"Error getting users: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.exception("Error getting users")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+def _check_role_escalation(admin: models.User, new_role: str) -> None:
+    """Назначать роли admin/superuser может только superuser —
+    иначе обычный админ мог бы создать себе второго суперпользователя."""
+    if new_role in ("admin", "superuser") and admin.role != "superuser":
+        raise HTTPException(status_code=403, detail="Only superuser can grant admin roles")
 
 @router.put("/users/{user_id}/role")
 def update_user_role(
     user_id: int,
-    role_data: dict,
+    role_data: schemas.RoleUpdate,
     db: Session = Depends(get_db),
     admin: models.User = Depends(check_admin)
 ):
     """Обновить роль пользователя"""
-    try:
-        user = db.query(models.User).filter(models.User.id == user_id).first()
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-        
-        new_role = role_data.get("new_role")
-        if new_role not in ["user", "developer", "manager", "admin", "superuser"]:
-            raise HTTPException(status_code=400, detail="Invalid role")
-        
-        # Не даем понизить суперпользователя
-        if user.role == "superuser" and admin.role != "superuser":
-            raise HTTPException(status_code=403, detail="Cannot modify superuser")
-        
-        user.role = new_role
-        db.commit()
-        
-        return {"message": f"User role updated to {new_role}"}
-    except Exception as e:
-        print(f"Error updating user role: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Не даем понизить суперпользователя
+    if user.role == "superuser" and admin.role != "superuser":
+        raise HTTPException(status_code=403, detail="Cannot modify superuser")
+
+    _check_role_escalation(admin, role_data.new_role)
+
+    user.role = role_data.new_role
+    db.commit()
+
+    return {"message": f"User role updated to {role_data.new_role}"}
+
+@router.put("/users/{user_id}")
+def update_user_admin(
+    user_id: int,
+    user_data: schemas.AdminUserUpdate,
+    db: Session = Depends(get_db),
+    admin: models.User = Depends(check_admin)
+):
+    """Обновить данные пользователя (имя, email, роль, статус)"""
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user.role == "superuser" and admin.role != "superuser":
+        raise HTTPException(status_code=403, detail="Cannot modify superuser")
+
+    updates = user_data.dict(exclude_unset=True)
+    if "role" in updates:
+        _check_role_escalation(admin, updates["role"])
+
+    for key, value in updates.items():
+        setattr(user, key, value)
+
+    # При деактивации отзываем все сессии пользователя
+    if updates.get("is_active") is False:
+        auth.revoke_all_user_tokens(db, user.id)
+
+    db.commit()
+    db.refresh(user)
+    return user
 
 @router.delete("/users/{user_id}")
 def delete_user(
@@ -193,9 +226,11 @@ def delete_user(
         db.commit()
         
         return {"message": "User deleted successfully"}
-    except Exception as e:
-        print(f"Error deleting user: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except HTTPException:
+        raise
+    except Exception:
+        logger.exception("Error deleting user")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 # ============== УПРАВЛЕНИЕ ПРОДУКТАМИ ==============
 
@@ -226,9 +261,9 @@ def get_all_products_admin(
         products = query.offset(skip).limit(limit).all()
         
         return products
-    except Exception as e:
-        print(f"Error getting products: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.exception("Error getting products")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.put("/products/{product_id}/toggle")
 def toggle_product_status(
@@ -246,9 +281,33 @@ def toggle_product_status(
         db.commit()
         
         return {"message": f"Product status changed to {product.is_active}"}
-    except Exception as e:
-        print(f"Error toggling product: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except HTTPException:
+        raise
+    except Exception:
+        logger.exception("Error toggling product")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@router.delete("/products/{product_id}")
+def delete_product_admin(
+    product_id: int,
+    db: Session = Depends(get_db),
+    admin: models.User = Depends(check_admin)
+):
+    """Удалить любой продукт (доступно админу/суперпользователю, в отличие
+    от DELETE /products/{id}, который разрешён только автору продукта)"""
+    try:
+        product = db.query(models.Product).filter(models.Product.id == product_id).first()
+        if not product:
+            raise HTTPException(status_code=404, detail="Product not found")
+
+        db.delete(product)
+        db.commit()
+        return {"message": "Product deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception:
+        logger.exception("Error deleting product")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 # ============== УПРАВЛЕНИЕ КАТЕГОРИЯМИ ==============
 
@@ -272,9 +331,11 @@ def create_category(
         db.commit()
         db.refresh(db_category)
         return db_category
-    except Exception as e:
-        print(f"Error creating category: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except HTTPException:
+        raise
+    except Exception:
+        logger.exception("Error creating category")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.get("/categories", response_model=List[schemas.Category])
 def get_categories_admin(
@@ -285,9 +346,9 @@ def get_categories_admin(
     try:
         categories = db.query(models.Category).all()
         return categories
-    except Exception as e:
-        print(f"Error getting categories: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.exception("Error getting categories")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.delete("/categories/{category_id}")
 def delete_category(
@@ -316,9 +377,11 @@ def delete_category(
         db.commit()
         
         return {"message": "Category deleted successfully"}
-    except Exception as e:
-        print(f"Error deleting category: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except HTTPException:
+        raise
+    except Exception:
+        logger.exception("Error deleting category")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 # ============== УПРАВЛЕНИЕ ЗАКАЗАМИ ==============
 
@@ -341,31 +404,23 @@ def get_all_orders(
         orders = query.offset(skip).limit(limit).all()
         
         return orders
-    except Exception as e:
-        print(f"Error getting orders: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        logger.exception("Error getting orders")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.put("/orders/{order_id}/status")
 def update_order_status(
     order_id: int,
-    status_data: dict,
+    status_data: schemas.OrderStatusUpdate,
     db: Session = Depends(get_db),
     admin: models.User = Depends(check_admin)
 ):
     """Обновить статус заказа"""
-    try:
-        order = db.query(models.Order).filter(models.Order.id == order_id).first()
-        if not order:
-            raise HTTPException(status_code=404, detail="Order not found")
-        
-        new_status = status_data.get("status")
-        if new_status not in ["pending", "paid", "completed", "cancelled"]:
-            raise HTTPException(status_code=400, detail="Invalid status")
-        
-        order.status = new_status
-        db.commit()
-        
-        return {"message": f"Order status updated to {new_status}"}
-    except Exception as e:
-        print(f"Error updating order: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    order.status = status_data.status
+    db.commit()
+
+    return {"message": f"Order status updated to {status_data.status}"}

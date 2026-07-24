@@ -1,0 +1,24 @@
+# Секреты — никогда не коммитить
+.env
+.env.local
+*.env
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Node / фронтенд
+node_modules/
+dist/
+frontend/dist/
+
+# БД / данные
+*.sqlite3
+backend/data/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store

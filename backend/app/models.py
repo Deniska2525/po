@@ -28,12 +28,28 @@ class User(Base):
     bio = Column(Text, nullable=True)
     avatar_url = Column(String, nullable=True)
     last_login = Column(DateTime, nullable=True)
+    failed_login_attempts = Column(Integer, default=0)
+    locked_until = Column(DateTime, nullable=True)
     
     products = relationship("Product", back_populates="developer")
     orders = relationship("Order", back_populates="user")
     downloads = relationship("Download", back_populates="user")
 
 
+
+
+class RefreshToken(Base):
+    __tablename__ = "refresh_tokens"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    # Храним только SHA-256 от токена — сырой токен есть только у клиента
+    token_hash = Column(String, unique=True, index=True)
+    expires_at = Column(DateTime)
+    revoked = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User")
 
 
 class Product(Base):
@@ -99,3 +115,15 @@ class Category(Base):
     description = Column(Text, nullable=True)
     icon = Column(String, nullable=True)
     product_count = Column(Integer, default=0)
+
+
+class Favorite(Base):
+    __tablename__ = "favorites"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    product_id = Column(Integer, ForeignKey("products.id"))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User")
+    product = relationship("Product")

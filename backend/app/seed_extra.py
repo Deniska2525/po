@@ -120,7 +120,7 @@ def run(db: Session):
     if not developers:
         bot = models.User(
             username="catalog_bot",
-            email="catalog-bot@marketplace.local",
+            email="catalog-bot@example.com",
             hashed_password=get_password_hash("not-a-real-account"),
             full_name="Каталог (демо)",
             role="developer",

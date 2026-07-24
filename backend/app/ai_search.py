@@ -8,9 +8,15 @@
 Поэтому один и тот же код работает с любым из них — достаточно поменять
 3 переменные окружения, ничего не переписывая.
 
-Рекомендуемые БЕСПЛАТНЫЕ провайдеры (не нужна банковская карта):
-  - Groq   (по умолчанию) — https://console.groq.com, очень быстрый,
-    модели Llama, честный бесплатный тариф без ограничения по дням.
+По умолчанию используется OpenRouter с моделью Gemma 4 (google/gemma-4-31b-it) —
+у OpenRouter есть бесплатный тариф (":free") без банковской карты, а Gemma 4
+поддерживает function calling, что и нужно для tool use в этом файле.
+Ключ: https://openrouter.ai/keys
+
+Альтернативные БЕСПЛАТНЫЕ провайдеры (если не подойдёт OpenRouter):
+  - Groq   — https://console.groq.com, очень быстрый, модели Llama/GPT-OSS,
+    честный бесплатный тариф без ограничения по дням (Gemma 4 там пока нет,
+    только старая Gemma 2 9B).
   - Gemini — https://aistudio.google.com/apikey, тоже бессрочно бесплатный
     для моделей Flash/Flash-Lite.
 
@@ -34,9 +40,12 @@ from .product_search import filter_products, product_to_dict
 
 logger = logging.getLogger("ai_search")
 
-
+# --- Настройка провайдера через переменные окружения ---
+# OpenRouter + Gemma 4 (по умолчанию, бесплатно): AI_BASE_URL=https://openrouter.ai/api/v1
+# Groq (бесплатно, без карты):    AI_BASE_URL=https://api.groq.com/openai/v1
+# Gemini (бесплатно, без карты):  AI_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
 AI_BASE_URL = os.getenv("AI_BASE_URL", "https://openrouter.ai/api/v1")
-AI_MODEL = os.getenv("AI_MODEL", "google/gemma-4-31b-it")
+AI_MODEL = os.getenv("AI_MODEL", "google/gemma-4-31b-it:free")
 MAX_TOOL_ITERATIONS = 4  # защита от зацикливания, если модель будет звать инструмент бесконечно
 
 SEARCH_TOOL = {
@@ -116,8 +125,8 @@ def ai_search(query: str, db: Session) -> dict:
     if not api_key:
         raise RuntimeError(
             "AI_API_KEY не задана в переменных окружения бэкенда — ИИ-поиск не может "
-            "работать без ключа (бесплатный ключ можно получить на console.groq.com "
-            "или aistudio.google.com/apikey)."
+            "работать без ключа (бесплатный ключ можно получить на openrouter.ai/keys, "
+            "console.groq.com или aistudio.google.com/apikey)."
         )
 
     client = OpenAI(api_key=api_key, base_url=AI_BASE_URL)

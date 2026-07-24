@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import api from '../services/api'
+import api, { setAccessToken } from '../services/api'
+import { useFavoritesStore } from './favorites'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    token: localStorage.getItem('token') || null,
-    isAuthenticated: !!localStorage.getItem('token')
+    isAuthenticated: false
   }),
   
   getters: {
@@ -25,13 +25,29 @@ export const useAuthStore = defineStore('auth', {
     async login(username, password) {
       try {
         const { data } = await api.post('/users/login', { username, password })
-        this.token = data.access_token
-        localStorage.setItem('token', this.token)
+        setAccessToken(data.access_token)
         this.isAuthenticated = true
         await this.fetchUser()
+        await useFavoritesStore().fetchFavorites()
         return { success: true }
       } catch (error) {
         return { success: false, message: error.response?.data?.detail || 'Ошибка входа' }
+      }
+    },
+
+    // Восстановление сессии при загрузке приложения: refresh-токен лежит
+    // в httpOnly cookie, поэтому просто пробуем обменять его на access-токен.
+    async init() {
+      try {
+        const { data } = await api.post('/users/refresh')
+        setAccessToken(data.access_token)
+        this.isAuthenticated = true
+        await this.fetchUser()
+        await useFavoritesStore().fetchFavorites()
+      } catch {
+        // Нет валидной сессии — остаёмся гостем
+        setAccessToken(null)
+        this.isAuthenticated = false
       }
     },
     
@@ -40,7 +56,12 @@ export const useAuthStore = defineStore('auth', {
         await api.post('/users/register', userData)
         return { success: true }
       } catch (error) {
-        return { success: false, message: error.response?.data?.detail || 'Ошибка регистрации' }
+        const detail = error.response?.data?.detail
+        // Ошибки валидации pydantic приходят массивом объектов
+        const message = Array.isArray(detail)
+          ? detail.map(d => d.msg).join('; ')
+          : (detail || 'Ошибка регистрации')
+        return { success: false, message }
       }
     },
     
@@ -65,11 +86,15 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     
-    logout() {
+    async logout() {
+      // Отзываем refresh-токен на сервере и чистим cookie
+      try { await api.post('/users/logout') } catch { /* сеть могла отвалиться — всё равно чистим локально */ }
       this.user = null
-      this.token = null
       this.isAuthenticated = false
-      localStorage.removeItem('token')
+      setAccessToken(null)
+      // Сбрасываем избранное — это данные конкретного пользователя,
+      // им не место в сессии следующего, кто зайдёт с этого браузера.
+      useFavoritesStore().reset()
     }
   }
 })

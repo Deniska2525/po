@@ -6,7 +6,10 @@
       <div class="nav-links">
         <router-link to="/" class="nav-link">Главная</router-link>
         <router-link to="/search" class="nav-link">Поиск</router-link>
-        <router-link to="/cart" class="nav-link cart-link">🛒 Корзина</router-link>
+        <router-link to="/cart" class="nav-link cart-link">
+          🛒 Корзина
+          <span v-if="cartStore.totalItems > 0" class="cart-badge">{{ cartStore.totalItems }}</span>
+        </router-link>
         
         <router-link v-if="isAdmin" to="/admin" class="nav-link admin-link">
           Админ-панель
@@ -33,11 +36,13 @@
 <script setup>
 import { computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
+import { useCartStore } from '../stores/cart'
 import { useRouter } from 'vue-router'
 import UserMenu from './UserMenu.vue'
 import ThemeToggle from './ThemeToggle.vue'
 
 const authStore = useAuthStore()
+const cartStore = useCartStore()
 const router = useRouter()
 
 const isAdmin = computed(() => {
@@ -95,6 +100,25 @@ const logout = () => {
 
 .cart-link {
   color: var(--primary-color);
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -14px;
+  background: var(--danger-text);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .admin-link {
