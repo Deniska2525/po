@@ -179,9 +179,14 @@ class Favorite(BaseModel):
 class AISearchRequest(BaseModel):
     query: str
 
+class AISearchRecommendation(BaseModel):
+    product: Product
+    reason: str = ""
+
 class AISearchResponse(BaseModel):
     message: str
-    products: List[Product]
+    advice: List[str] = []
+    recommendations: List[AISearchRecommendation] = []
 
 # ===== Statistics schemas =====
 class DashboardStats(BaseModel):

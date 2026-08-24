@@ -2,7 +2,7 @@
   <div class="home">
     <section class="hero" :class="{ 'hero--compact': hasSearched }">
       <h1>Какое ПО вам нужно?</h1>
-      <p>Опишите своими словами задачу — ИИ подберёт подходящие варианты из каталога</p>
+      <p>Опишите своими словами задачу или чего вам не хватает — ИИ разберётся, что внедрить, и подберёт подходящие варианты из каталога</p>
       <div class="hero-search">
         <input
           type="text"
@@ -35,11 +35,19 @@
         <p>{{ aiMessage }}</p>
       </div>
 
-      <div v-if="productsStore.searchResults.length" class="products-grid grid-3">
+      <div class="ai-advice" v-if="aiAdvice.length">
+        <h3>💡 Что стоит внедрить и как</h3>
+        <ol>
+          <li v-for="(step, i) in aiAdvice" :key="i">{{ step }}</li>
+        </ol>
+      </div>
+
+      <div v-if="recommendations.length" class="products-grid grid-3">
         <ProductCard
-          v-for="product in productsStore.searchResults"
-          :key="product.id"
-          :product="product"
+          v-for="item in recommendations"
+          :key="item.product.id"
+          :product="item.product"
+          :reason="item.reason"
           view="grid-3"
         />
       </div>
@@ -62,6 +70,8 @@ const errorMessage = ref('');
 
 const loading = computed(() => productsStore.loading);
 const aiMessage = computed(() => productsStore.aiSearchMessage);
+const aiAdvice = computed(() => productsStore.aiAdvice);
+const recommendations = computed(() => productsStore.aiRecommendations);
 
 const handleSearch = async () => {
   const query = searchQuery.value.trim();
@@ -79,7 +89,8 @@ const resetSearch = () => {
   searchQuery.value = '';
   hasSearched.value = false;
   errorMessage.value = '';
-  productsStore.searchResults = [];
+  productsStore.aiRecommendations = [];
+  productsStore.aiAdvice = [];
   productsStore.aiSearchMessage = '';
 };
 </script>

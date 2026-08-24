@@ -30,14 +30,25 @@ def ai_search_endpoint(payload: schemas.AISearchRequest, db: Session = Depends(g
             detail="Не удалось выполнить ИИ-поиск. Попробуйте ещё раз чуть позже.",
         )
 
-    product_ids = result.get("product_ids", [])
+    advice = result.get("advice", [])
+    recs = result.get("recommendations", [])
+    product_ids = [r["product_id"] for r in recs]
     products = (
         db.query(models.Product)
         .filter(models.Product.id.in_(product_ids), models.Product.is_active == True)
         .all()
     )
-    # Сохраняем порядок релевантности, который выбрал ИИ
+    # Сохраняем порядок релевантности и обоснование, которые выбрал ИИ
     by_id = {p.id: p for p in products}
-    ordered = [by_id[i] for i in product_ids if i in by_id]
+    reasons_by_id = {r["product_id"]: r.get("reason", "") for r in recs}
+    recommendations = [
+        {"product": by_id[r["product_id"]], "reason": reasons_by_id.get(r["product_id"], "")}
+        for r in recs
+        if r["product_id"] in by_id
+    ]
 
-    return {"message": result.get("message", ""), "products": ordered}
+    return {
+        "message": result.get("message", ""),
+        "advice": advice,
+        "recommendations": recommendations,
+    }

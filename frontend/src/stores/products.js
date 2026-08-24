@@ -8,6 +8,8 @@ export const useProductsStore = defineStore('products', {
     searchResults: [],
     categories: [],
     loading: false,
+    aiRecommendations: [], // [{ product, reason }] — только для контекстного ИИ-поиска
+    aiAdvice: [],          // конкретные шаги/советы от ИИ, отдельно от списка карточек
     aiSearchMessage: '',
     aiSearchError: ''
   }),
@@ -19,11 +21,13 @@ export const useProductsStore = defineStore('products', {
       this.aiSearchMessage = ''
       try {
         const { data } = await api.post('/ai-search/', { query })
-        this.searchResults = data.products
+        this.aiRecommendations = data.recommendations || []
+        this.aiAdvice = data.advice || []
         this.aiSearchMessage = data.message
         return { success: true }
       } catch (error) {
-        this.searchResults = []
+        this.aiRecommendations = []
+        this.aiAdvice = []
         this.aiSearchError = error.response?.data?.detail || 'Не удалось выполнить ИИ-поиск. Попробуйте ещё раз.'
         return { success: false, message: this.aiSearchError }
       } finally {

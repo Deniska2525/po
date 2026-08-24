@@ -139,6 +139,34 @@
   line-height: 1;
 }
 
+.ai-advice {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.ai-advice h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.ai-advice ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ai-advice li {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
 .empty-results {
   text-align: center;
   padding: 3rem 2rem;

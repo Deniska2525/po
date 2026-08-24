@@ -14,6 +14,7 @@
     </div>
     
     <div class="card-content">
+      <p v-if="reason" class="recommendation-reason">💡 {{ reason }}</p>
       <p class="product-description">{{ truncatedDescription }}</p>
             
       <div class="product-meta">
@@ -56,6 +57,10 @@ const props = defineProps({
   view: {
     type: String,
     default: 'grid-3'
+  },
+  reason: {
+    type: String,
+    default: ''
   }
 })
 
